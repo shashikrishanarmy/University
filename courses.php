@@ -82,16 +82,33 @@ include 'config/db.php';
 
 
         footer{
-            background:#0b1d51;
-            color:white;
-            text-align:center;
-            padding:25px;
-        }
+    background:#0b1d51;
+    color:white;
+    padding:25px 40px;
+}
 
-        footer p{
+.footer-container{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+}
 
-            margin:5px;
-        }
+.footer-left{
+    text-align:left;
+}
+
+.footer-center{
+    text-align:center;
+    flex:1;
+}
+
+.footer-left p,
+.footer-center p{
+    margin:8px 0;
+}
+
+       
 
     </style>
  </head>
@@ -147,6 +164,35 @@ include 'config/db.php';
 
             ?>
         </table>
+</div>
+
+<footer>
+
+    <div class="footer-container">
+
+        
+        <div class="footer-left">
+
+            <h3>Contact Us</h3>
+
+            <p>📞 Call: 0114325690</p>
+
+            <p>✉️ Email: nexusuniversity@gmail.com</p>
+
+            <p>📍 Address: Nexus University, New Kandy Road, Malabe</p>
+
+        </div>
+
+        
+        <div class="footer-center">
+
+            <p>© 2026 All Rights Reserved</p>
+
+        </div>
+
+    </div>
+
+</footer>
 
 
 
