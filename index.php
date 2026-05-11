@@ -147,41 +147,37 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-       footer {
-            background: #0b1d51;
-            color: white;
-            padding: 20px 40px;
-            margin-top: 50px;
-            position: relative;
-        }
+      footer {
+    background: #0b1d51;
+    color: white;
+    padding: 20px;
+}
 
-        .footer-container {
-            display: flex;
-            flex-direction: column;  
-            align-items: center;
-            justify-content: center;
-        }
+/* TOP ROW */
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .footer-left {
-            text-align: center;
-            margin-bottom: 15px;
-        }
+/* LEFT SIDE */
+.footer-left p {
+    margin: 5px 0;
+}
 
-        .footer-center {
-            text-align: center;
-        }
+/* RIGHT SIDE (MAP) */
+.map-container iframe {
+    width: 300px;
+    height: 200px;
+}
 
-        .footer-left p,
-        .footer-center p {
-            margin: 8px 0;
-        }
-
-        .map-container {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-        }
-
+/* BOTTOM CENTER */
+.footer-bottom {
+    text-align: center;
+    margin-top: 15px;
+    border-top: 1px solid #ffffff33;
+    padding-top: 10px;
+}
     </style>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -279,44 +275,34 @@
 </div>
     </section>
 
-    <footer>
+   <footer>
 
-        <div class="footer-container">
+    <!-- TOP ROW -->
+    <div class="footer-container">
 
-
-            <div class="footer-left">
-
-                <h3>Contact Us</h3>
-
-                <p>📞 Call: 0114325690</p>
-
-                <p>✉️ Email: nexusuniversity@gmail.com</p>
-
-                <p>📍 Address: Nexus University, New Kandy Road, Malabe</p>
-
-            </div>
+        <div class="footer-left">
+            <h3>Contact Us</h3>
+            <p>📞 Call: 0114325690</p>
+            <p>✉️ Email: nexusuniversity@gmail.com</p>
+            <p>📍 Address: Nexus University, New Kandy Road, Malabe</p>
         </div>
 
-        <div class="footer-container">
-
-
-            <div class="footer-center">
-
-                <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
-
-            </div>
-
-            <div class="map-container">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1806.7150936451546!2d79.95011974610354!3d6.889292134643838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae251802c0af99d%3A0x335d8c2ab966f3a2!2sFoot%20Path!5e0!3m2!1sen!2slk!4v1778496791443!5m2!1sen!2slk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="map-container">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=..."
+                style="border:0;" 
+                loading="lazy">
+            </iframe>
         </div>
 
-        </div>
+    </div>
 
-        
+    <!-- BOTTOM ROW -->
+    <div class="footer-bottom">
+        <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
+    </div>
 
-        
-
-    </footer>
+</footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

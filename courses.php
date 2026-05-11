@@ -14,8 +14,11 @@ include 'config/db.php';
     <style>
 
         body{
-            margin:0;
-            font-family:Arial;
+            margin: 0;
+            font-family: Arial;
+            background-color: #7480b5ff;
+            padding-top: 30px;
+            
         }
 
         nav{
@@ -24,6 +27,11 @@ include 'config/db.php';
             display:flex;
             justify-content:space-between;
             align-items:center;
+            position:fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
         }
 
         nav a{
@@ -35,6 +43,23 @@ include 'config/db.php';
 
         nav a:hover{
             color:gold;
+        }
+
+        .logo-section {
+             display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .logo-section h2 {
+            color: white;
+            margin: 0;
         }
 
         .title{
@@ -81,33 +106,37 @@ include 'config/db.php';
         }
 
 
-        footer{
-    background:#0b1d51;
-    color:white;
-    padding:25px 40px;
+        footer {
+    background: #0b1d51;
+    color: white;
+    padding: 20px;
 }
 
-.footer-container{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
+/* TOP ROW */
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.footer-left{
-    text-align:left;
+/* LEFT SIDE */
+.footer-left p {
+    margin: 5px 0;
 }
 
-.footer-center{
-    text-align:center;
-    flex:1;
+/* RIGHT SIDE (MAP) */
+.map-container iframe {
+    width: 300px;
+    height: 200px;
 }
 
-.footer-left p,
-.footer-center p{
-    margin:8px 0;
+/* BOTTOM CENTER */
+.footer-bottom {
+    text-align: center;
+    margin-top: 15px;
+    border-top: 1px solid #ffffff33;
+    padding-top: 10px;
 }
-
        
 
     </style>
@@ -115,19 +144,22 @@ include 'config/db.php';
  
  <body>
 
- <nav>
-    <h2 style="color:white;">NEXUS UNIVERSITY</h2>
+   <nav>
+        <div class="logo-section">
+        <img src="assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
+        <h2 style="color:white;">NEXUS UNIVERSITY</h2>
+        </div>
 
-    <div>
-        <a href="index.php">HOME</a>
-        <a href="courses.php">COURSES</a>
-        <a href="gallery.php">GALLERY</a>
-        <a href="contact.php">CONTACT US</a>
+        <div>
+            <a href="index.php">HOME</a>
+            <a href="courses.php">COURSES</a>
+            <a href="gallery.php">GALLERY</a>
+            <a href="contact.php">CONTACT US</a>
 
-        <a href="auth/login.php">LOGIN</a>
-        <a href="auth/signup.php">SIGNUP</a>
-    </div>
-</nav>
+            <a href="auth/login.php">LOGIN</a>
+            <a href="auth/signup.php">SIGNUP</a>
+        </div>
+    </nav>
 
 <section class="title">
     <h1> Course Details </h1>
@@ -166,30 +198,31 @@ include 'config/db.php';
         </table>
 </div>
 
-<footer>
+   <footer>
 
+    <!-- TOP ROW -->
     <div class="footer-container">
 
-        
         <div class="footer-left">
-
             <h3>Contact Us</h3>
-
             <p>📞 Call: 0114325690</p>
-
             <p>✉️ Email: nexusuniversity@gmail.com</p>
-
             <p>📍 Address: Nexus University, New Kandy Road, Malabe</p>
-
         </div>
 
-        
-        <div class="footer-center">
-
-            <p>© 2026 All Rights Reserved</p>
-
+        <div class="map-container">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=..."
+                style="border:0;" 
+                loading="lazy">
+            </iframe>
         </div>
 
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div class="footer-bottom">
+        <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
     </div>
 
 </footer>
