@@ -155,9 +155,9 @@ include 'config/db.php';
 
                 <tr>
                 <td> <?php echo $row['id']; ?></td>
-                <td> <?php echo $row['course_name'];?></td>
-                <td> <?php echo $row['duration']; ?></td>
-                <td> <?php echo number_format($row['fee']); ?></td>
+                <td> <?php echo $row['contact_name'];?></td>
+                <td> <?php echo $row['email']; ?></td>
+                <td> <?php echo $row['message']; ?></td>
             </tr>
             <?php
             }
