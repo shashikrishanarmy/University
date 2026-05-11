@@ -9,6 +9,7 @@
             margin: 0;
             font-family: Arial;
             background-color: #7480b5ff;
+            padding-top: 110px;
         }
 
         nav {
@@ -17,6 +18,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
         }
 
        
@@ -29,6 +35,23 @@
 
         nav a:hover{
             color:gold;
+        }
+
+        .logo-section {
+             display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .logo-section h2 {
+            color: white;
+            margin: 0;
         }
 
         .hero h1 {
@@ -47,11 +70,49 @@
 
         }
 
+        carouselExampleIndicators {
+            margin-top: 40px;
+        }
+
+        .carousel-item img {
+            width: 90%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .featured-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #10100fff;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            position: relative;
+            animation: zoomIn 0.8s ease-out forwards;
+}
+
+        @keyframes zoomIn {
+            from {
+            transform: scale(0.7);
+            opacity: 0;
+            }
+            to {
+            transform: scale(1);
+            opacity: 1;
+            }
+        }
+        
+
+        
+
         .card-container {
             display: flex;
             gap: 20px;
             justify-content: space-between;
-            align-items: stretch; /* IMPORTANT */
+            align-items: stretch;
             margin: 20px;
         }
 
@@ -86,42 +147,55 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        footer {
+       footer {
             background: #0b1d51;
             color: white;
-            padding: 25px 40px;
+            padding: 20px 40px;
+            margin-top: 50px;
+            position: relative;
         }
 
         .footer-container {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;  
             align-items: center;
-            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .footer-left {
-            text-align: left;
+            text-align: center;
+            margin-bottom: 15px;
         }
 
         .footer-center {
             text-align: center;
-            flex: 1;
         }
 
         .footer-left p,
         .footer-center p {
             margin: 8px 0;
         }
+
+        .map-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+
     </style>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 </head>
 
 <body style="background-color: #76e5ebff;">
 
     <nav>
+        <div class="logo-section">
+        <img src="assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
         <h2 style="color:white;">NEXUS UNIVERSITY</h2>
+        </div>
 
         <div>
             <a href="index.php">HOME</a>
@@ -134,15 +208,10 @@
         </div>
     </nav>
 
-    <section class="hero">
-
-        <h1>Build Your Future With Us</h1>
-        
-
-    </section>
+    
 
 
-  <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+  <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
 
   <div class="carousel-indicators">
     <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></button>
@@ -153,15 +222,15 @@
   <div class="carousel-inner">
 
     <div class="carousel-item active">
-      <img src="assets/images/uni1.jpeg" class="d-block w-50 mx-auto" alt="First slide">
+      <img src="assets/images/uni1.jpeg" class="d-block w-80 mx-auto" alt="First slide">
     </div>
 
     <div class="carousel-item">
-      <img src="assets/images/uni2.jpg" class="d-block w-50 mx-auto" alt="Second slide">
+      <img src="assets/images/uni2.jpg" class="d-block w-80 mx-auto" alt="Second slide">
     </div>
 
     <div class="carousel-item">
-      <img src="assets/images/uni3.jpg" class="d-block w-50 mx-auto" alt="Third slide">
+      <img src="assets/images/uni3.jpg" class="d-block w-80 mx-auto" alt="Third slide">
     </div>
 
   </div>
@@ -169,8 +238,10 @@
 </div>
 
     <section>
-
-        <h2 style="text-align:center;"> Featured Courses </h2>
+        <div class="featured-title p-3">
+        <h2 class="featured-title" style="text-align:left; font-weight: bold;"> Professional Courses </h2>
+         </div>
+        </div>
 
 <div class="card-container">
 
@@ -224,15 +295,26 @@
                 <p>📍 Address: Nexus University, New Kandy Road, Malabe</p>
 
             </div>
+        </div>
+
+        <div class="footer-container">
 
 
             <div class="footer-center">
 
-                <p>© 2026 All Rights Reserved</p>
+                <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
 
             </div>
 
+            <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1806.7150936451546!2d79.95011974610354!3d6.889292134643838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae251802c0af99d%3A0x335d8c2ab966f3a2!2sFoot%20Path!5e0!3m2!1sen!2slk!4v1778496791443!5m2!1sen!2slk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
+
+        </div>
+
+        
+
+        
 
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
