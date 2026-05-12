@@ -195,12 +195,12 @@
 
         <div>
             <a href="index.php">HOME</a>
-            <a href="courses.php">COURSES</a>
-            <a href="gallery.php">GALLERY</a>
-            <a href="contact.php">CONTACT US</a>
+            <a href="./user/courses.php">COURSES</a>
+            <!-- <a href="gallery.php">GALLERY</a> -->
+            <!-- <a href="contact.php">CONTACT US</a> -->
 
             <a href="auth/login.php">LOGIN</a>
-            <a href="auth/signup.php">SIGNUP</a>
+            <!-- <a href="auth/signup.php">SIGNUP</a> -->
         </div>
     </nav>
 
@@ -239,45 +239,46 @@
          </div>
         </div>
 
+<?php
+include 'config/db.php';
+
+$result = mysqli_query($conn, "SELECT * FROM home_sections");
+?>
+
 <div class="card-container">
 
-    <div class="card">
-        <h3>Web Development</h3>
-        <img src="assets/images/web.jpg" alt="Web Development" class="card-img">
-        <p style="text-align:justify;">The Web Development course is designed to provide students with a strong foundation in designing, 
-            building, and maintaining modern websites and web applications. This course covers both front-end and back-end development, 
-            including essential technologies such as HTML, CSS, JavaScript, and server-side programming concepts. Students will also gain 
-            practical experience in responsive design, database integration, and web application deployment. By the end of the course, 
-            learners will be able to create fully functional, user-friendly, and dynamic websites that meet industry standards and 
-            real-world requirements</p>
-    </div>
+<?php if(mysqli_num_rows($result) > 0){ ?>
 
-    <div class="card">
-        <h3>Cyber Security</h3>
-        <img src="assets/images/cs.jpg" alt="Cyber Security" class="card-img">
-        <p style="text-align: justify;">The Cyber Security course provides students with essential knowledge and practical skills to protect computer systems, networks, 
-            and data from cyber threats. It covers key areas such as ethical hacking, network security, cryptography, malware analysis, and 
-            risk management. Students will learn how cyber attacks occur and how to prevent them using modern security tools and techniques. 
-            This course prepares learners to identify vulnerabilities, secure digital systems, and respond effectively to security incidents
-             in real-world environments.</p>
-    </div>
+    <?php while($row = mysqli_fetch_assoc($result)) { ?>
 
-    <div class="card">
-        <h3>Data Science</h3>
-        <img src="assets/images/ds.jpg" alt="Data Science" class="card-img">
-        <p style="text-align: justify;">The Data Science course introduces students to the principles and techniques used to collect, 
-            analyze, and interpret large sets of data to support decision-making. It covers key areas such as statistics, data visualization,
-             machine learning, and programming with tools like Python and R. Students will learn how to clean and process data, build 
-             predictive models, and extract meaningful insights from complex datasets. This course prepares learners to apply data-driven 
-             solutions in various industries such as business, healthcare, and technology.</p>
-    </div>
+        <div class="card">
+
+            <h3><?php echo htmlspecialchars($row['title']); ?></h3>
+
+            <img src="assets/images/<?php echo htmlspecialchars($row['image']); ?>" class="card-img">
+
+            <p style="text-align:justify;">
+                <?php echo htmlspecialchars($row['description']); ?>
+            </p>
+
+        </div>
+
+    <?php } ?>
+
+<?php } else { ?>
+
+    <p style="text-align:center; width:100%;">
+        No courses available at the moment.
+    </p>
+
+<?php } ?>
 
 </div>
     </section>
 
    <footer>
 
-    <!-- TOP ROW -->
+    
     <div class="footer-container">
 
         <div class="footer-left">
@@ -297,7 +298,7 @@
 
     </div>
 
-    <!-- BOTTOM ROW -->
+    
     <div class="footer-bottom">
         <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
     </div>

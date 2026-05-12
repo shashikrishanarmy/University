@@ -10,27 +10,32 @@ if(isset($_POST['login'])){
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $query = "SELECT * FROM users WHERE email='$email'";
+$query = "SELECT * FROM users WHERE email='$email'";
+$result = mysqli_query($conn, $query);
 
-    $result = mysqli_query($conn, $query);
+if(mysqli_num_rows($result) == 1){
 
-    if(mysqli_num_rows($result) > 0) {
+    $user = mysqli_fetch_assoc($result);
 
-        $user = mysqli_fetch_assoc($result);
+    if(password_verify($password, $user['password'])){
 
-        if(password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['role'] = $user['role'];
 
-            $_SESSION['user_id'] = $user['id'];
-
-            header('Location: ../admin/dashboard.php');
-            exit();
-
-        } else {
-            $error = "Incorrect password";
+        if($user['role'] == 'admin'){
+            header("Location: ../admin/dashboard.php");
+        }else{
+            header("Location: ../users/home.php");
         }
 
-    } else {
-        $error = "Email not found";
+        exit();
+
+    }else{
+        $error = "Incorrect password";
+    }
+
+    }else{
+    $error = "Email not found";
     }
 }
 ?>

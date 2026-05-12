@@ -1,5 +1,5 @@
 <?php
-
+/*
 include 'config/db.php';
 
 ?>
@@ -34,40 +34,75 @@ include 'config/db.php';
 
         .title{
             text-align:center;
-            padding:30px;
+            padding:50px 20px;
+            background:linear-gradient(to right, #76e5ebff, #dff6ff);
         }
 
-      .gallery-container{
+        .title h1{
+            font-size:42px;
+            color:#0b1d51;
+            margin-bottom:10px;
+            font-weight:bold;
+            letter-spacing:1px;
+            animation:fadeDown 1s ease;
+        }
+
+        .title p{
+            color:#444;
+            font-size:18px;
+        }
+
+        @keyframes fadeDown{
+            from{
+            opacity:0;
+            transform:translateY(-30px);
+        }
+            to{
+            opacity:1;
+            transform:translateY(0);
+            }
+        }
+
+        .gallery-container{
             width:90%;
             margin:auto;
             display:grid;
-            grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
-            gap:25px;
-            padding-bottom:50px;
+            grid-template-columns:repeat(auto-fit, minmax(300px,1fr));
+            gap:30px;
+            padding:50px 0;
         }
 
         .gallery-card{
             background:white;
-            border-radius:15px;
+            border-radius:18px;
             overflow:hidden;
-            box-shadow:0px 4px 10px rgba(0,0,0,0.1);
-            transition:0.3s;
+            box-shadow:0 6px 15px rgba(0,0,0,0.15);
+            transition:0.4s;
+            position:relative;
         }
 
         .gallery-card:hover{
-            transform:translateY(-5px);
+            transform:translateY(-10px) scale(1.02);
+            box-shadow:0 12px 25px rgba(0,0,0,0.25);
         }
 
         .gallery-card img{
             width:100%;
-            height:220px;
+            height:240px;
             object-fit:cover;
+            transition:0.4s;
+        }
+
+        .gallery-card:hover img{
+            transform:scale(1.08);
         }
 
         .gallery-card h3{
             text-align:center;
-            padding:15px;
+            padding:18px;
             color:#0b1d51;
+            font-size:22px;
+            margin:0;
         }
 
         footer{

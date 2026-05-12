@@ -2,11 +2,15 @@
 include '../config/db.php';
 
 if(isset($_POST['register'])){
+
     $fullname = $_POST['fullname'];
     $email = $_POST['email'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $role = "student";
 
-    $query = "INSERT INTO users(fullname,email,password) VALUES('$fullname', '$email', '$password')";
+    $query = "INSERT INTO users(name, email, password, role)
+          VALUES('$fullname', '$email', '$password', '$role')";
+
     mysqli_query($conn, $query);
 
     $success = "Registration Successful!";

@@ -1,6 +1,7 @@
 <?php
 
-include 'config/db.php';
+include '../config/db.php';
+
 
 ?>
 
@@ -21,19 +22,20 @@ include 'config/db.php';
             
         }
 
-        nav{
-            background:#0b1d51;
-            padding:15px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            position:fixed;
+         nav {
+            background: #0b1d51;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             z-index: 1000;
         }
 
+       
         nav a{
             color:white;
             text-decoration:none;
@@ -146,18 +148,18 @@ include 'config/db.php';
 
    <nav>
         <div class="logo-section">
-        <img src="assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
+        <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
         <h2 style="color:white;">NEXUS UNIVERSITY</h2>
         </div>
 
         <div>
-            <a href="index.php">HOME</a>
+            <a href="../index.php">HOME</a>
             <a href="courses.php">COURSES</a>
-            <a href="gallery.php">GALLERY</a>
-            <a href="contact.php">CONTACT US</a>
+           <!-- <a href="gallery.php">GALLERY</a> -->
+           <!-- <a href="contact.php">CONTACT US</a> -->
 
-            <a href="auth/login.php">LOGIN</a>
-            <a href="auth/signup.php">SIGNUP</a>
+            <a href="../auth/login.php">LOGIN</a>
+           <!-- <a href="auth/signup.php">SIGNUP</a> -->
         </div>
     </nav>
 
