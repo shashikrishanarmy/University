@@ -195,7 +195,7 @@
 
         <div>
             <a href="index.php">HOME</a>
-            <a href="./user/courses.php">COURSES</a>
+            <a href="./users/courses.php">COURSES</a>
             <!-- <a href="gallery.php">GALLERY</a> -->
             <!-- <a href="contact.php">CONTACT US</a> -->
 
