@@ -62,6 +62,48 @@ if(mysqli_num_rows($result) == 1){
             background:linear-gradient(135deg, #0b1d51, #1e3c72);
         }
 
+        nav {
+            background: #0b1d51;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+       
+        nav a{
+            color:white;
+            text-decoration:none;
+            margin:10px;
+
+        }
+
+        nav a:hover{
+            color:gold;
+        }
+
+        .logo-section {
+             display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .logo-section h2 {
+            color: white;
+            margin: 0;
+        }
+
         .login-container{
             width:380px;
             background:white;
@@ -153,6 +195,24 @@ if(mysqli_num_rows($result) == 1){
 </head>
 
 <body>
+
+    <nav>
+        <div class="logo-section">
+        <img src="assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
+        <h2 style="color:white;">NEXUS UNIVERSITY</h2>
+        </div>
+
+        <div>
+            <a href="../index.php">HOME</a>
+            <a href="../users/courses.php">COURSES</a>
+            <!-- <a href="gallery.php">GALLERY</a> -->
+            <!-- <a href="contact.php">CONTACT US</a> -->
+
+            <a href="../auth/login.php">LOGIN</a>
+            <!-- <a href="auth/signup.php">SIGNUP</a> -->
+        </div>
+    </nav>
+
 
     <div class="login-container">
 

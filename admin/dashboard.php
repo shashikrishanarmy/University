@@ -1,15 +1,78 @@
+<?php
+session_start();
+include '../config/db.php';
+
+// TEMP admin access 
+if(!isset($_SESSION['admin'])){
+    $_SESSION['admin'] = true;
+}
+
+/* ================= ADD ================= */
+if(isset($_POST['add'])){
+
+    $title = $_POST['title'];
+    $desc  = $_POST['description'];
+
+    $image = $_FILES['image']['name'];
+    $tmp   = $_FILES['image']['tmp_name'];
+
+    move_uploaded_file($tmp, "../assets/images/".$image);
+
+    mysqli_query($conn, "INSERT INTO home_sections (title, description, image)
+    VALUES ('$title','$desc','$image')");
+}
+
+/* ================= DELETE ================= */
+if(isset($_GET['delete'])){
+    $id = $_GET['delete'];
+    mysqli_query($conn, "DELETE FROM home_sections WHERE id=$id");
+}
+
+/* ================= UPDATE ================= */
+if(isset($_POST['update'])){
+
+    $id    = $_POST['id'];
+    $title = $_POST['title'];
+    $desc  = $_POST['description'];
+
+    if($_FILES['image']['name']){
+        $image = $_FILES['image']['name'];
+        move_uploaded_file($_FILES['image']['tmp_name'], "../assets/images/".$image);
+
+        mysqli_query($conn, "UPDATE home_sections 
+        SET title='$title', description='$desc', image='$image'
+        WHERE id=$id");
+    } else {
+        mysqli_query($conn, "UPDATE home_sections 
+        SET title='$title', description='$desc'
+        WHERE id=$id");
+    }
+}
+
+/* ================= FETCH ================= */
+$result = mysqli_query($conn, "SELECT * FROM home_sections");
+?>
+
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>NEXUS UNIVERSITY</title>
+    <title>Admin Dashboard</title>
 
     <style>
         body {
-            margin: 0;
             font-family: Arial;
-            background-color: #7480b5ff;
-            padding-top: 110px;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
         }
 
         nav {
@@ -54,256 +117,133 @@
             margin: 0;
         }
 
-        .hero h1 {
-            font_size: 50px;
-            color: #0b1d51;
-
+        .form-box {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
         }
 
-        .btn {
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+
+        button {
             background: #0b1d51;
             color: white;
-            padding: 15px 25px;
+            padding: 10px;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-
         }
-
-        carouselExampleIndicators {
-            margin-top: 40px;
-        }
-
-        .carousel-item img {
-            width: 90%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .featured-title {
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            color: #10100fff;
-            font-family: 'Poppins', sans-serif;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-            position: relative;
-            animation: zoomIn 0.8s ease-out forwards;
-}
-
-        @keyframes zoomIn {
-            from {
-            transform: scale(0.7);
-            opacity: 0;
-            }
-            to {
-            transform: scale(1);
-            opacity: 1;
-            }
-        }
-        
-
-        
 
         .card-container {
             display: flex;
             gap: 20px;
-            justify-content: space-between;
-            align-items: stretch;
-            margin: 20px;
+            flex-wrap: wrap;
         }
 
         .card {
-            flex: 1;              /* to keeps equal width of the cards */
-            padding: 20px;
-            background: #4dd2faff;
+            background: white;
+            padding: 15px;
+            width: 30%;
             border-radius: 10px;
-            text-align: center;
-            transition: 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
-            min-height: 220px;   /* to keeps equal height of the cards */
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         }
 
-        .card-img {
+        .card img {
             width: 100%;
             height: 150px;
             object-fit: cover;
-            margin: 10px 0;
-            border-radius: 8px;
         }
 
-        
-    
-
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        .actions {
+            margin-top: 10px;
         }
 
-      footer {
-    background: #0b1d51;
-    color: white;
-    padding: 20px;
-}
+        .actions a {
+            color: red;
+            text-decoration: none;
+            margin-right: 10px;
+        }
 
-/* TOP ROW */
-.footer-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* LEFT SIDE */
-.footer-left p {
-    margin: 5px 0;
-}
-
-/* RIGHT SIDE (MAP) */
-.map-container iframe {
-    width: 300px;
-    height: 200px;
-}
-
-/* BOTTOM CENTER */
-.footer-bottom {
-    text-align: center;
-    margin-top: 15px;
-    border-top: 1px solid #ffffff33;
-    padding-top: 10px;
-}
     </style>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 </head>
 
-<body style="background-color: #76e5ebff;">
+<body>
 
-    <nav>
+ <nav>
         <div class="logo-section">
         <img src="assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
         <h2 style="color:white;">NEXUS UNIVERSITY</h2>
         </div>
 
         <div>
-            <a href="index.php">HOME</a>
-            <a href="./user/courses.php">COURSES</a>
+            <a href="../index.php">HOME</a>
+            <a href="../users/courses.php">COURSES</a>
             <!-- <a href="gallery.php">GALLERY</a> -->
             <!-- <a href="contact.php">CONTACT US</a> -->
 
-            <a href="auth/login.php">LOGIN</a>
+            <a href="../auth/login.php">LOGIN</a>
             <!-- <a href="auth/signup.php">SIGNUP</a> -->
         </div>
     </nav>
 
-    
+<div class="container">
 
+<h2>Admin Dashboard</h2>
 
-  <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+<!-- ADD FORM -->
+<div class="form-box">
+    <h3>Add New Course</h3>
 
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
-  </div>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Title" required>
 
-  <div class="carousel-inner">
+        <textarea name="description" placeholder="Description" required></textarea>
 
-    <div class="carousel-item active">
-      <img src="assets/images/uni1.jpeg" class="d-block w-80 mx-auto" alt="First slide">
-    </div>
+        <input type="file" name="image" required>
 
-    <div class="carousel-item">
-      <img src="assets/images/uni2.jpg" class="d-block w-80 mx-auto" alt="Second slide">
-    </div>
-
-    <div class="carousel-item">
-      <img src="assets/images/uni3.jpg" class="d-block w-80 mx-auto" alt="Third slide">
-    </div>
-
-  </div>
-
+        <button name="add">Add Course</button>
+    </form>
 </div>
 
-    <section>
-        <div class="featured-title p-3">
-        <h2 class="featured-title" style="text-align:left; font-weight: bold;"> Professional Courses </h2>
-         </div>
-        </div>
-
+<!-- DISPLAY CARDS -->
 <div class="card-container">
 
-    <div class="card">
-        <h3>Web Development</h3>
-        <img src="assets/images/web.jpg" alt="Web Development" class="card-img">
-        <p style="text-align:justify;">The Web Development course is designed to provide students with a strong foundation in designing, 
-            building, and maintaining modern websites and web applications. This course covers both front-end and back-end development, 
-            including essential technologies such as HTML, CSS, JavaScript, and server-side programming concepts. Students will also gain 
-            practical experience in responsive design, database integration, and web application deployment. By the end of the course, 
-            learners will be able to create fully functional, user-friendly, and dynamic websites that meet industry standards and 
-            real-world requirements</p>
-    </div>
+<?php while($row = mysqli_fetch_assoc($result)) { ?>
 
     <div class="card">
-        <h3>Cyber Security</h3>
-        <img src="assets/images/cs.jpg" alt="Cyber Security" class="card-img">
-        <p style="text-align: justify;">The Cyber Security course provides students with essential knowledge and practical skills to protect computer systems, networks, 
-            and data from cyber threats. It covers key areas such as ethical hacking, network security, cryptography, malware analysis, and 
-            risk management. Students will learn how cyber attacks occur and how to prevent them using modern security tools and techniques. 
-            This course prepares learners to identify vulnerabilities, secure digital systems, and respond effectively to security incidents
-             in real-world environments.</p>
+
+        <!-- EDIT FORM INSIDE CARD -->
+        <form method="POST" enctype="multipart/form-data">
+
+            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+
+            <input type="text" name="title" value="<?php echo $row['title']; ?>">
+
+            <img src="../assets/images/<?php echo $row['image']; ?>">
+
+            <textarea name="description"><?php echo $row['description']; ?></textarea>
+
+            <input type="file" name="image">
+
+            <button name="update">Update</button>
+
+        </form>
+
+        <div class="actions">
+            <a href="?delete=<?php echo $row['id']; ?>" onclick="return confirm('Delete this?')">Delete</a>
+        </div>
+
     </div>
 
-    <div class="card">
-        <h3>Data Science</h3>
-        <img src="assets/images/ds.jpg" alt="Data Science" class="card-img">
-        <p style="text-align: justify;">The Data Science course introduces students to the principles and techniques used to collect, 
-            analyze, and interpret large sets of data to support decision-making. It covers key areas such as statistics, data visualization,
-             machine learning, and programming with tools like Python and R. Students will learn how to clean and process data, build 
-             predictive models, and extract meaningful insights from complex datasets. This course prepares learners to apply data-driven 
-             solutions in various industries such as business, healthcare, and technology.</p>
-    </div>
+<?php } ?>
 
 </div>
-    </section>
 
-   <footer>
+</div>
 
-    
-    <div class="footer-container">
-
-        <div class="footer-left">
-            <h3>Contact Us</h3>
-            <p>📞 Call: 0114325690</p>
-            <p>✉️ Email: nexusuniversity@gmail.com</p>
-            <p>📍 Address: Nexus University, New Kandy Road, Malabe</p>
-        </div>
-
-        <div class="map-container">
-            <iframe 
-                src="https://www.google.com/maps/embed?pb=..."
-                style="border:0;" 
-                loading="lazy">
-            </iframe>
-        </div>
-
-    </div>
-
-    
-    <div class="footer-bottom">
-        <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
-    </div>
-
-</footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
