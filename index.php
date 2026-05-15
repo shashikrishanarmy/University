@@ -2,6 +2,14 @@
 <html>
 
 <head>
+
+    <script>
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = function () {
+        window.location.href = "../index.php";
+    };
+    </script>
+
     <title>NEXUS UNIVERSITY</title>
 
     <style>
@@ -185,6 +193,8 @@
 
 </head>
 
+    
+
 <body style="background-color: #76e5ebff;">
 
     <nav>
@@ -242,7 +252,7 @@
 <?php
 include 'config/db.php';
 
-$result = mysqli_query($conn, "SELECT * FROM home_sections");
+$result = mysqli_query($conn, "SELECT * FROM home_sections WHERE status='visible' LIMIT 3");
 ?>
 
 <div class="card-container">
