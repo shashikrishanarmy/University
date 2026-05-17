@@ -1,165 +1,123 @@
+<?php
+include '../config/db.php';
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
-
 <head>
-
-    <script>
-    window.history.pushState(null, "", window.location.href);
-    window.onpopstate = function () {
-        window.location.href = "../index.php";
-    };
-    </script>
-
-    <title>NEXUS UNIVERSITY</title>
+    <title>NEXUS UNIVERSITY - Student Home</title>
 
     <style>
-        body {
-            margin: 0;
-            font-family: Arial;
-            background-color: #7480b5ff;
-            padding-top: 110px;
-        }
 
-        nav {
-            background: #0b1d51;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-       
-        nav a{
-            color:white;
-            text-decoration:none;
-            margin:10px;
-
-        }
-
-        nav a:hover{
-            color:gold;
-        }
-
-        .logo-section {
-             display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-        }
-
-        .logo-section h2 {
-            color: white;
-            margin: 0;
-        }
-
-        .hero h1 {
-            font_size: 50px;
-            color: #0b1d51;
-
-        }
-
-        .btn {
-            background: #0b1d51;
-            color: white;
-            padding: 15px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-
-        }
-
-        carouselExampleIndicators {
-            margin-top: 40px;
-        }
-
-        .carousel-item img {
-            width: 90%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .featured-title {
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            color: #10100fff;
-            font-family: 'Poppins', sans-serif;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-            position: relative;
-            animation: zoomIn 0.8s ease-out forwards;
+* {
+    box-sizing: border-box;
 }
 
-        @keyframes zoomIn {
-            from {
-            transform: scale(0.7);
-            opacity: 0;
-            }
-            to {
-            transform: scale(1);
-            opacity: 1;
-            }
-        }
-        
+body {
+    margin: 0;
+    font-family: Arial;
+    background-color: #7480b5ff;
+    padding-top: 110px;
+}
 
-        
+/* NAVBAR */
+nav {
+    background: #0b1d51;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
 
-        .card-container {
-            display: flex;
-            gap: 20px;
-            justify-content: space-between;
-            align-items: stretch;
-            margin: 20px;
-        }
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 10px;
+}
 
-        .card {
-            flex: 1;              /* to keeps equal width of the cards */
-            padding: 20px;
-            background: #4dd2faff;
-            border-radius: 10px;
-            text-align: center;
-            transition: 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+nav a:hover {
+    color: gold;
+}
 
-            min-height: 220px;   /* to keeps equal height of the cards */
-        }
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-        .card-img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            margin: 10px 0;
-            border-radius: 8px;
-        }
+.logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
 
-        
-    
+/* HERO SECTION */
+.hero {
+    text-align: center;
+    padding: 50px 20px;
+}
 
+.hero h1 {
+    color: #0b1d51;
+    font-size: 42px;
+}
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
+.hero p {
+    font-size: 18px;
+    color: #333;
+}
 
-      footer {
+/* FEATURE CARDS */
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 30px;
+}
+
+.card {
+    background: white;
+    width: 280px;
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+    color: #0b1d51;
+}
+
+.card p {
+    color: #555;
+}
+
+.card a {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #0b1d51;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.card a:hover {
+    background: #142c7a;
+}
+
+/* FOOTER */
+footer {
     background: #0b1d51;
     color: white;
     padding: 20px;
-    
 }
 
 /* TOP ROW */
@@ -167,7 +125,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
 }
 
 /* LEFT SIDE */
@@ -181,124 +138,67 @@
     height: 200px;
 }
 
-/* BOTTOM CENTER */
+/* BOTTOM */
 .footer-bottom {
     text-align: center;
     margin-top: 15px;
     border-top: 1px solid #ffffff33;
     padding-top: 10px;
-
-
-
-    /* TOP BAR (mobile) */
-.topbar {
-    display: none;
-    background: #0b1d51;
-    color: white;
-    padding: 12px 15px;
-    align-items: center;
-    justify-content: space-between;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 2000;
 }
 
-.menu-btn {
-    font-size: 24px;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-}
-
-
-
-.sidebar h2 {
-    color: white;
-    text-align: center;
-}
-
-.sidebar a {
-    display: block;
-    color: white;
-    padding: 12px;
-    text-decoration: none;
-}
-
-.sidebar a:hover {
-    background: #1f3a93;
-}
-
-
-
-
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-
-    
-
-    body {
-        margin-left: 0;
-        padding-top: 60px;
-    }
-}
-}
     </style>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 </head>
 
-    
+<body>
 
-<body style="background-color: #76e5ebff;">
-
-    <nav>
-        
-        <div class="logo-section">
-            <button class="btn btn-light" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"> ☰ Menu </button>
-        <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
+<!-- NAVBAR -->
+<nav>
+    <div class="logo-section">
+        <img src="../assets/images/logo.png" alt="Logo" class="logo">
         <h2 style="color:white;">NEXUS UNIVERSITY</h2>
-        </div>
+    </div>
 
-        <div>
-            <a href="../index.php">HOME</a>
-            <a href="./users/courses.php">COURSES</a>
-            <!-- <a href="gallery.php">GALLERY</a> -->
-            <!-- <a href="contact.php">CONTACT US</a> -->
+    <div>
+        <a href="../users/home.php" style="color:gold;">HOME</a>
+        <a href="../users/view_materials.php">MATERIALS</a>
+        <a href="../users/assignments.php">ASSIGNMENTS</a>
+        
+        <a href="../auth/logout.php">LOGOUT</a>
+    </div>
+</nav>
 
-            <a href="auth/login.php">LOGIN</a>
-            <a href="../auth/logout.php">LOGOUT</a>
-            <!-- <a href="auth/signup.php">SIGNUP</a> -->
-        </div>
-    </nav>
+<!-- HERO -->
+<section class="hero">
+    <h1>Welcome to Nexus University</h1>
+    <p>Explore courses, access study materials, and enhance your learning experience.</p>
+</section>
 
-   <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas">
+<!-- FEATURE CARDS -->
+<section class="cards">
 
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title">NEXUS UNIVERSITY</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-  </div>
+    <div class="card">
+        <h3>📚 Courses</h3>
+        <p>View all available courses and enroll easily.</p>
+        <a href="../users/courses.php">Go to Courses</a>
+    </div>
 
-  <div class="offcanvas-body">
-    <a href="index.php" class="d-block py-2">HOME</a>
-    <a href="./users/courses.php" class="d-block py-2">COURSES</a>
-    <a href="auth/login.php" class="d-block py-2">LOGIN</a>
-  </div>
+    <div class="card">
+        <h3>📄 Materials</h3>
+        <p>Download lecture notes and study resources.</p>
+        <a href="../users/view_materials.php">View Materials</a>
+    </div>
 
-</div>
+    <div class="card">
+        <h3>🎓 My Learning</h3>
+        <p>Track your academic progress and activities.</p>
+        <a href="#">Coming Soon</a>
+    </div>
 
+</section>
 
-    
+<!-- FOOTER -->
+<footer>
 
-
-  
-   <footer>
-
-    
     <div class="footer-container">
 
         <div class="footer-left">
@@ -310,7 +210,7 @@
 
         <div class="map-container">
             <iframe 
-                src="https://www.google.com/maps/embed?pb=..."
+                src="https://www.google.com/maps?q=Malabe,Sri%20Lanka&output=embed"
                 style="border:0;" 
                 loading="lazy">
             </iframe>
@@ -318,28 +218,11 @@
 
     </div>
 
-    
     <div class="footer-bottom">
         <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
     </div>
 
 </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        function toggleSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.querySelector(".overlay");
-
-            if (sidebar.style.left === "0px") {
-            sidebar.style.left = "-220px";
-            overlay.style.display = "none";
-        }   else {
-            sidebar.style.left = "0px";
-            overlay.style.display = "block";
-            }
-        }
-</script>
 </body>
-
 </html>
