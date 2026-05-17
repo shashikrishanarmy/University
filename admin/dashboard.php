@@ -134,7 +134,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         </div>
         <div>
             <a href="../index.php">HOME</a>
-            <a href="../users/courses.php">COURSES</a>
+            <a href="../admin/coursesdash.php">COURSES</a>
             <a href="../auth/logout.php">LOGOUT</a> 
         </div>
     </nav>

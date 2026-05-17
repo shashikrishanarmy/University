@@ -63,6 +63,7 @@ if(isset($_POST['login'])){
             justify-content:center;
             align-items:center;
             background:linear-gradient(135deg, #0b1d51, #1e3c72);
+            padding-top: 110px;
         }
 
         nav {

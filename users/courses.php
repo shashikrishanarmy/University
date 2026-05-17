@@ -14,15 +14,18 @@ include '../config/db.php';
 
     <style>
 
-        body{
-            margin: 0;
-            font-family: Arial;
-            background-color: #7480b5ff;
-            padding-top: 30px;
-            
-        }
+     * {
+    box-sizing: border-box;
+}
 
-         nav {
+body {
+    margin: 0;
+    font-family: Arial;
+    background-color: #7480b5ff;
+    padding-top: 110px;
+}
+
+        nav {
             background: #0b1d51;
             padding: 15px;
             display: flex;
