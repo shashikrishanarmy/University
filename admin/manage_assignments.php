@@ -88,11 +88,22 @@ if(isset($_POST['update_assignment'])){
 <title>Manage Assignments</title>
 
 <style>
-body{
-    font-family:Arial;
-    background:#7480b5ff;
-    padding:20px;
+body {
+            margin: 0;
+            font-family: Arial;
+            background-color: #7480b5ff;
+            padding-top: 110px;
 }
+
+nav {
+            background: #0b1d51; padding: 15px; display: flex;
+            justify-content: space-between; align-items: center;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+        }
+        nav a { color: white; text-decoration: none; margin: 10px; }
+        nav a:hover { color: gold; }
+        .logo-section { display: flex; align-items: center; gap: 10px; }
+        .logo { width: 50px; height: 50px; border-radius: 50%; }
 
 .container{
     width:80%;
@@ -150,6 +161,21 @@ a{
 </head>
 
 <body>
+
+ <nav>
+        <div class="logo-section">
+            <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
+            <h2>NEXUS UNIVERSITY</h2>
+        </div>
+        <div>
+            <a href="../index.php">HOME</a>
+            <a href="../admin/coursesdash.php">COURSES</a>
+            <a href="../admin/manage_materials.php">MATERIALS</a>
+            <a href="../admin/view_submissions.php">SUBMISSIONS</a>
+            <a href="../admin/manage_assignments.php">ASSIGNMENTS</a>
+            <a href="../auth/logout.php">LOGOUT</a> 
+        </div>
+    </nav>
 
 <div class="container">
 

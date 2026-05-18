@@ -128,10 +128,11 @@ if (isset($_GET['delete_id'])) {
             <h2 style="color:white; margin:0;">NEXUS UNIVERSITY</h2>
         </div>
         <div>
-             <a href="../index.php">HOME</a>
+            <a href="../index.php">HOME</a>
             <a href="../admin/coursesdash.php">COURSES</a>
             <a href="../admin/manage_materials.php">MATERIALS</a>
             <a href="../admin/view_submissions.php">SUBMISSIONS</a>
+            <a href="../admin/manage_assignments.php">ASSIGNMENTS</a>
             <a href="../auth/logout.php">LOGOUT</a> 
         </div>
     </nav>
