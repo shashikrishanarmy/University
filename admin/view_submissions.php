@@ -3,14 +3,13 @@ include '../config/db.php';
 
 $message = "";
 
-// --- HANDLE ASSIGNMENT DELETION ---
+/* ================= DELETE ASSIGNMENT ================= */
 if (isset($_GET['delete_id'])) {
     $delete_id = intval($_GET['delete_id']);
-    
-    // Fetch file path to clean up server storage before deleting database record
+
     $file_query = "SELECT file_path FROM assignments WHERE id = $delete_id";
     $file_result = mysqli_query($conn, $file_query);
-    
+
     if ($file_row = mysqli_fetch_assoc($file_result)) {
         $physical_file = $file_row['file_path'];
         if (!empty($physical_file) && file_exists($physical_file)) {
@@ -19,79 +18,185 @@ if (isset($_GET['delete_id'])) {
     }
 
     $delete_query = "DELETE FROM assignments WHERE id = $delete_id";
+
     if (mysqli_query($conn, $delete_query)) {
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     } else {
-        $message = "<p style='color:red; font-weight:bold;'>Database Error: Failed to remove assignment record.</p>";
+        $message = "Error deleting assignment.";
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NEXUS UNIVERSITY - View Submissions</title>
+    <title>NEXUS UNIVERSITY - Submissions</title>
     <style>
-        * { box-sizing: border-box; }
-        body {
-            margin: 0; 
-            font-family: Arial, sans-serif;
-            background-color: #7480b5ff; 
-            padding-top: 110px;
+        * {
+            box-sizing: border-box;
         }
-        
-        /* NAVBAR HEADER STYLING */
-        nav {
-            background: #0b1d51; 
-            padding: 15px; 
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #7480b5ff;
+            padding-top: 110px;
+            
             display: flex;
-            justify-content: space-between; 
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #0b1d51;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            right: 0; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
             z-index: 1000;
         }
-        nav a { color: white; text-decoration: none; margin: 10px; }
-        nav a:hover { color: gold; }
-        .logo-section { display: flex; align-items: center; gap: 10px; }
-        .logo { width: 50px; height: 50px; border-radius: 50%; }
-        
-        /* CONTENT LAYOUT STYLING */
-        .title { text-align: center; padding: 20px; }
-        .title h1 { color: #0b1d51; font-size: 40px; }
 
-        .table-container { display: flex; justify-content: center; margin-bottom: 60px; }
-        table { width: 80%; border-collapse: collapse; background: white; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
-        table th { background: #0b1d51; color: white; padding: 15px; }
-        table td { padding: 15px; text-align: center; border: 1px solid #ddd; vertical-align: middle; }
-        table tr:hover { background: #f2f2f2; }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 10px;
+        }
+
+        nav a:hover {
+            color: gold;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .logo-section h2 {
+            color: white;
+            margin: 0;
+        }
+
+        .title {
+            text-align: center;
+            padding: 20px 20px;
+        }
+
+        .title h1 {
+            color: #0b1d51;
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .table-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 60px;
+            flex: 1;
+        }
+
+        .action-bar {
+            width: 80%;
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .btn-track {
+            background: #0b1d51;
+            color: gold;
+            padding: 10px 18px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+
+        .btn-track:hover {
+            background: white;
+            color: #0b1d51;
+            border-color: #0b1d51;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        table th {
+            background: #0b1d51;
+            color: white;
+            padding: 15px;
+        }
+
+        table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        table tr:hover {
+            background: #f2f2f2;
+        }
+
+        .btn {
+            padding: 6px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        .delete {
+            background: #dc3545;
+        }
         
-        /* UI BUTTONS */
-        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block; font-size: 14px; margin: 2px; }
-        .btn-download { background: #28a745; color: white; }
-        .btn-download:hover { background: #218838; }
-        .btn-delete { background: #dc3545; color: white; }
-        .btn-delete:hover { background: #c82333; }
-        .disabled-link { background: #6c757d; color: #fff; cursor: not-allowed; pointer-events: none; opacity: 0.6; }
-        .msg-box { text-align: center; margin-bottom: 15px; }
+        .download {
+            background: #28a745;
+        }
 
         footer {
             background: #0b1d51;
             color: white;
             padding: 20px;
+            margin-top: 40px;
         }
+
         .footer-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 80%;
-            margin: 0 auto;
         }
-        .footer-left p { margin: 5px 0; }
-        .map-container iframe { width: 300px; height: 200px; }
+
+        .footer-left p {
+            margin: 5px 0;
+        }
+
+        .map-container iframe {
+            width: 300px;
+            height: 200px;
+        }
+
         .footer-bottom {
             text-align: center;
             margin-top: 15px;
@@ -100,17 +205,19 @@ if (isset($_GET['delete_id'])) {
         }
     </style>
 </head>
+
 <body>
 
-    <!-- SHARED NAVIGATION BAR HEADER SECTION -->
+    <!-- MATCHED NAVIGATION BAR WITH LOGO PANEL -->
     <nav>
         <div class="logo-section">
-            <img src="../assets/images/logo.png" alt="Logo" class="logo">
-            <h2 style="color:white; margin:0;">NEXUS UNIVERSITY</h2>
+            <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
+            <h2>NEXUS UNIVERSITY</h2>
         </div>
         <div>
             <a href="../index.php">HOME</a>
             <a href="../admin/coursesdash.php">COURSES</a>
+            <a href="../admin/manage_enrollments.php">ENROLLMENTS</a>
             <a href="../admin/manage_materials.php">MATERIALS</a>
             <a href="../admin/view_submissions.php">SUBMISSIONS</a>
             <a href="../admin/manage_assignments.php">ASSIGNMENTS</a>
@@ -118,89 +225,106 @@ if (isset($_GET['delete_id'])) {
         </div>
     </nav>
 
-    <!-- CONTENT BODY TITLE HEADER -->
+    <!-- MATCHED PAGE HEADER LAYOUT -->
     <section class="title">
         <h1>Student Submissions</h1>
+        <?php if(!empty($message)): ?>
+            <p style="color: red; font-weight: bold; text-align: center;"><?php echo htmlspecialchars($message); ?></p>
+        <?php endif; ?>
     </section>
 
-    <div class="msg-box"><?php echo $message; ?></div>
-
-    <!-- SUBMISSIONS RUNTIME DISPLAY -->
+    <!-- DATATABLE CONTAINER -->
     <div class="table-container">
+        
+        <div class="action-bar">
+            <a href="../admin/assignment_submission_report.php" class="btn-track">
+                📊 View Submission Tracking Report (Submitted vs Not Submitted)
+            </a>
+        </div>
+
+        <?php
+        /* ================= MAIN QUERY ================= */
+        $query = "
+        SELECT 
+        a.id AS assignment_id,
+        a.title,
+        a.description,
+        a.deadline,
+        a.file_path AS assignment_file,
+        c.course_name,
+        s.file_path AS submission_file,
+        s.submitted_at,
+        u.id AS student_num,
+        u.name AS student_name
+        FROM assignments a
+        LEFT JOIN courses c ON a.course_id = c.id
+        LEFT JOIN submissions s ON a.id = s.assignment_id
+        LEFT JOIN users u ON s.user_id = u.id
+        ORDER BY a.id DESC
+        ";
+
+        $result = mysqli_query($conn, $query);
+        ?>
+
         <table>
-            <thead>
-                <tr>
-                    <th>Course Name</th>
-                    <th>Assignment Title</th>
-                    <th>Description</th>
-                    <th>Deadline</th>
-                    <th>Attached Document</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $query = "SELECT a.id AS assignment_id, a.title, a.description, a.deadline, a.file_path, c.course_name 
-                          FROM assignments a
-                          LEFT JOIN courses c ON a.course_id = c.id
-                          ORDER BY a.id DESC";
-                          
-                $result = mysqli_query($conn, $query);
+            <tr>
+                <th>Course</th>
+                <th>Assignment</th>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Submission File</th>
+                <th>Submitted At</th>
+                <th>Assignment File</th>
+                <th>Action</th>
+            </tr>
 
-                if ($result && mysqli_num_rows($result) > 0) {
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        $has_file = !empty($row['file_path']) && file_exists($row['file_path']);
-                        ?>
-                        <tr>
-                            <td><strong><?php echo htmlspecialchars($row['course_name'] ?? 'N/A'); ?></strong></td>
-                            <td><?php echo htmlspecialchars($row['title']); ?></td>
-                            <td><?php echo htmlspecialchars($row['description']); ?></td>
-                            <td>
-                                <?php 
-                                echo !empty($row['deadline']) ? date('M d, Y - h:i A', strtotime($row['deadline'])) : 'No Deadline'; 
-                                ?>
-                            </td>
-                            <td>
-                                <?php if ($has_file): ?>
-                                    <a href="<?php echo htmlspecialchars($row['file_path']); ?>" target="_blank">
-                                        <code><?php echo basename($row['file_path']); ?></code>
-                                    </a>
-                                <?php else: ?>
-                                    <span style="color: #666; font-style: italic;">No file attached</span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <!-- DOWNLOAD BUTTON -->
-                                <?php if ($has_file): ?>
-                                    <a href="<?php echo htmlspecialchars($row['file_path']); ?>" 
-                                       download="<?php echo basename($row['file_path']); ?>" 
-                                       class="btn btn-download">
-                                       Download
-                                    </a>
-                                <?php else: ?>
-                                    <a href="#" class="btn disabled-link" title="No file available to download">
-                                        Download
-                                    </a>
-                                <?php endif; ?>
-
-                                <!-- DELETE BUTTON -->
-                                <a href="?delete_id=<?php echo $row['assignment_id']; ?>" 
-                                   class="btn btn-delete" 
-                                   onclick="return confirm('Are you sure you want to permanently delete this assignment?');">
-                                   Delete
-                                </a>
-                            </td>
-                        </tr>
-                        <?php
-                    }
-                } else {
-                    echo "<tr><td colspan='6'>No assignments discovered in system database registry.</td></tr>";
-                }
-                ?>
-            </tbody>
+            <?php 
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) { 
+            ?>
+            <tr>
+                <td><?php echo htmlspecialchars($row['course_name'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['title']); ?></td>
+                
+                <!-- FIXED CRITICAL VARIABLE ALIAS MAPPINGS HERE -->
+                <td><?php echo isset($row['student_num']) ? htmlspecialchars($row['student_num']) : 'Not Submitted'; ?></td>
+                <td><?php echo isset($row['student_name']) ? htmlspecialchars($row['student_name']) : 'Not Submitted'; ?></td>
+                
+                <td>
+                    <?php if (!empty($row['submission_file'])) { ?>
+                        <a class="btn download" href="<?php echo htmlspecialchars($row['submission_file']); ?>" target="_blank">
+                            View
+                        </a>
+                    <?php } else { echo "No Submission"; } ?>
+                </td>
+                <td>
+                    <?php echo htmlspecialchars($row['submitted_at'] ?? 'Not Submitted'); ?>
+                </td>
+                <td>
+                    <?php if (!empty($row['assignment_file'])) { ?>
+                        <a class="btn download" href="<?php echo htmlspecialchars($row['assignment_file']); ?>" download>
+                            Download
+                        </a>
+                    <?php } else { echo "No File"; } ?>
+                </td>
+                <td>
+                    <a class="btn delete"
+                       href="?delete_id=<?php echo $row['assignment_id']; ?>"
+                       onclick="return confirm('Are you sure you want to delete this assignment?')">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            <?php 
+                } 
+            } else {
+                echo "<tr><td colspan='8'>No records found.</td></tr>";
+            }
+            ?>
         </table>
     </div>
 
+    <!-- MATCHED FOOTER COMPLEX -->
     <footer>
         <div class="footer-container">
             <div class="footer-left">
@@ -210,11 +334,7 @@ if (isset($_GET['delete_id'])) {
                 <p>📍 Address: Nexus University, New Kandy Road, Malabe</p>
             </div>
             <div class="map-container">
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=..."
-                    style="border:0;" 
-                    loading="lazy">
-                </iframe>
+                <iframe src="https://www.google.com/maps/embed?pb=..." style="border:0;" loading="lazy"></iframe>
             </div>
         </div>
         <div class="footer-bottom">

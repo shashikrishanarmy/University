@@ -35,18 +35,18 @@ if (isset($_POST['upload_material'])) {
                                  VALUES ($course_id, '$title', '$target_file')";
                 
                 if (mysqli_query($conn, $insert_query)) {
-                    $message = "<p style='color:green; font-weight:bold;'>Material uploaded and saved successfully!</p>";
+                    $message = "<p style='color:green; font-weight:bold; margin:0;'>Material uploaded and saved successfully!</p>";
                 } else {
-                    $message = "<p style='color:red; font-weight:bold;'>Database Error: Failed to log material details.</p>";
+                    $message = "<p style='color:red; font-weight:bold; margin:0;'>Database Error: Failed to log material details.</p>";
                 }
             } else {
-                $message = "<p style='color:red; font-weight:bold;'>Error: Failed to upload file to the server folder directory.</p>";
+                $message = "<p style='color:red; font-weight:bold; margin:0;'>Error: Failed to upload file to the server folder directory.</p>";
             }
         } else {
-            $message = "<p style='color:red; font-weight:bold;'>Error: Invalid file format. Only PDF, DOCX, PPTX, TXT, and ZIP are allowed.</p>";
+            $message = "<p style='color:red; font-weight:bold; margin:0;'>Error: Invalid file format. Only PDF, DOCX, PPTX, TXT, and ZIP are allowed.</p>";
         }
     } else {
-        $message = "<p style='color:red; font-weight:bold;'>Error: All fields are required.</p>";
+        $message = "<p style='color:red; font-weight:bold; margin:0;'>Error: All fields are required.</p>";
     }
 }
 
@@ -76,60 +76,224 @@ if (isset($_GET['delete_id'])) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>NEXUS UNIVERSITY - Manage Materials</title>
     <style>
-        * { box-sizing: border-box; }
+        * { 
+            box-sizing: border-box; 
+        }
+        
         body {
-            margin: 0; font-family: Arial, sans-serif;
-            background-color: #7480b5ff; padding-top: 110px;
+            margin: 0; 
+            font-family: Arial, sans-serif;
+            background-color: #7480b5ff; 
+            padding-top: 110px;
         }
+        
         nav {
-            background: #0b1d51; padding: 15px; display: flex;
-            justify-content: space-between; align-items: center;
-            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: #0b1d51; 
+            padding: 15px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            z-index: 1000;
         }
-        nav a { color: white; text-decoration: none; margin: 10px; }
-        nav a:hover { color: gold; }
-        .logo-section { display: flex; align-items: center; gap: 10px; }
-        .logo { width: 50px; height: 50px; border-radius: 50%; }
         
-        .title { text-align: center; padding: 20px; }
-        .title h1 { color: #0b1d51; font-size: 40px; }
+        nav a { 
+            color: white; 
+            text-decoration: none; 
+            margin: 10px; 
+        }
+        
+        nav a:hover { 
+            color: gold; 
+        }
+        
+        .logo-section { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+        
+        .logo { 
+            width: 50px; 
+            height: 50px; 
+            border-radius: 50%; 
+        }
+        
+        .logo-section h2 {
+            color: white;
+            margin: 0;
+        }
+        
+        .title { 
+            text-align: center; 
+            padding: 20px; 
+        }
+        
+        .title h1 { 
+            color: #0b1d51; 
+            font-size: 40px; 
+            margin: 0;
+        }
 
-        .form-container { display: flex; justify-content: center; margin-bottom: 30px; }
+        .container {
+            width: 80%;
+            margin: auto;
+            margin-bottom: 60px;
+        }
+
+        .form-container { 
+            display: flex; 
+            justify-content: center; 
+            margin-bottom: 30px; 
+        }
+        
         .upload-form {
-            background: white; padding: 25px; border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1); width: 80%;
-            display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;
+            background: white; 
+            padding: 25px; 
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1); 
+            width: 100%;
+            display: flex; 
+            gap: 15px; 
+            align-items: flex-end; 
+            flex-wrap: wrap;
         }
-        .form-group { display: flex; flex-direction: column; flex: 1; min-width: 200px; }
-        .form-group label { margin-bottom: 5px; color: #0b1d51; font-weight: bold; }
-        .form-group select, .form-group input { padding: 10px; border: 1px solid #ddd; border-radius: 4px; background: white; }
         
-        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .btn-submit { background: #28a745; color: white; }
-        .btn-delete { background: #dc3545; color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; font-size: 14px;}
+        .form-group { 
+            display: flex; 
+            flex-direction: column; 
+            flex: 1; 
+            min-width: 200px; 
+        }
+        
+        .form-group label { 
+            margin-bottom: 5px; 
+            color: #0b1d51; 
+            font-weight: bold; 
+        }
+        
+        .form-group select, .form-group input { 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            background: white; 
+            width: 100%;
+        }
+        
+        .btn { 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-submit { 
+            background: #28a745; 
+            color: white; 
+        }
 
-        .table-container { display: flex; justify-content: center; margin-bottom: 60px; }
-        table { width: 80%; border-collapse: collapse; background: white; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
-        table th { background: #0b1d51; color: white; padding: 15px; }
-        table td { padding: 15px; text-align: center; border: 1px solid #ddd; }
-        table tr:hover { background: #f2f2f2; }
-        .msg-box { text-align: center; margin-bottom: 15px; }
+        .btn-submit:hover {
+            background: #218838;
+        }
+        
+        .btn-delete { 
+            background: #dc3545; 
+            color: white; 
+            padding: 6px 12px; 
+            font-size: 14px;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+        }
+
+        .table-container { 
+            display: flex; 
+            justify-content: center; 
+            margin-top: 20px;
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            background: white; 
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1); 
+        }
+        
+        table th { 
+            background: #0b1d51; 
+            color: white; 
+            padding: 15px; 
+        }
+        
+        table td { 
+            padding: 15px; 
+            text-align: center; 
+            border: 1px solid #ddd; 
+        }
+        
+        table tr:hover { 
+            background: #f2f2f2; 
+        }
+        
+        .msg-box { 
+            text-align: center; 
+            margin-bottom: 20px; 
+        }
+        
+        footer {
+            background: #0b1d51;
+            color: white;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-left p {
+            margin: 5px 0;
+        }
+
+        .map-container iframe {
+            width: 300px;
+            height: 200px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 15px;
+            border-top: 1px solid #ffffff33;
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
 
+    <!-- MATCHED NAVIGATION BAR WITH LOGO PANEL -->
     <nav>
         <div class="logo-section">
-            <img src="../assets/images/logo.png" alt="Logo" class="logo">
-            <h2 style="color:white; margin:0;">NEXUS UNIVERSITY</h2>
+            <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
+            <h2>NEXUS UNIVERSITY</h2>
         </div>
         <div>
             <a href="../index.php">HOME</a>
             <a href="../admin/coursesdash.php">COURSES</a>
+            <a href="../admin/manage_enrollments.php">ENROLLMENTS</a>
             <a href="../admin/manage_materials.php">MATERIALS</a>
             <a href="../admin/view_submissions.php">SUBMISSIONS</a>
             <a href="../admin/manage_assignments.php">ASSIGNMENTS</a>
@@ -137,94 +301,116 @@ if (isset($_GET['delete_id'])) {
         </div>
     </nav>
 
+    <!-- MATCHED PAGE HEADER LAYOUT -->
     <section class="title">
         <h1>Manage Course Learning Materials</h1>
     </section>
 
-    <div class="msg-box"><?php echo $message; ?></div>
+    <!-- CONTAINER BLOCK -->
+    <div class="container">
 
-    <!-- MATERIAL UPLOAD FORM -->
-    <div class="form-container">
-        <!-- CRITICAL: enctype="multipart/form-data" must be included for files to upload successfully -->
-        <form action="" method="POST" enctype="multipart/form-data" class="upload-form">
-            
-            <!-- Target Course Dropdown -->
-            <div class="form-group">
-                <label>Target Course</label>
-                <select name="course_id" required>
-                    <option value="">-- Choose Course --</option>
-                    <?php
-                    $course_query = "SELECT id, course_name FROM courses";
-                    $course_result = mysqli_query($conn, $course_query);
-                    while ($course = mysqli_fetch_assoc($course_result)) {
-                        echo "<option value='".$course['id']."'>".$course['course_name']."</option>";
+        <div class="msg-box"><?php echo $message; ?></div>
+
+        <!-- MATERIAL UPLOAD FORM -->
+        <div class="form-container">
+            <form action="" method="POST" enctype="multipart/form-data" class="upload-form">
+                
+                <!-- Target Course Dropdown -->
+                <div class="form-group">
+                    <label>Target Course</label>
+                    <select name="course_id" required>
+                        <option value="">-- Choose Course --</option>
+                        <?php
+                        $course_query = "SELECT id, course_name FROM courses";
+                        $course_result = mysqli_query($conn, $course_query);
+                        while ($course = mysqli_fetch_assoc($course_result)) {
+                            echo "<option value='".htmlspecialchars($course['id'])."'>".htmlspecialchars($course['course_name'])."</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <!-- Material Document Title -->
+                <div class="form-group">
+                    <label>Material / Lecture Title</label>
+                    <input type="text" name="title" placeholder="e.g., Week 1: Intro to PHP" required>
+                </div>
+
+                <!-- File Upload Input Field -->
+                <div class="form-group">
+                    <label>Select Document File</label>
+                    <input type="file" name="material_file" required>
+                </div>
+
+                <div>
+                    <button type="submit" name="upload_material" class="btn btn-submit">Upload Material</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- CURRENT MATERIALS VISUAL LIST -->
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>Course Name</th>
+                    <th>Material Title</th>
+                    <th>Uploaded Filename</th>
+                    <th>Date Added</th>
+                    <th>Action</th>
+                </tr>
+
+                <?php
+                $query = "SELECT m.id AS material_id, m.title, m.file_path, m.uploaded_at, c.course_name 
+                          FROM course_materials m
+                          JOIN courses c ON m.course_id = c.id
+                          ORDER BY m.id DESC";
+                          
+                $result = mysqli_query($conn, $query);
+
+                if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        ?>
+                        <tr>
+                            <td><strong><?php echo htmlspecialchars($row['course_name']); ?></strong></td>
+                            <td><?php echo htmlspecialchars($row['title']); ?></td>
+                            <td><code><?php echo htmlspecialchars(basename($row['file_path'])); ?></code></td>
+                            <td><?php echo htmlspecialchars(date('M d, Y', strtotime($row['uploaded_at']))); ?></td>
+                            <td>
+                                <a href="?delete_id=<?php echo htmlspecialchars($row['material_id']); ?>" 
+                                   class="btn btn-delete" 
+                                   onclick="return confirm('Are you sure you want to permanently delete this material file?');">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                        <?php
                     }
-                    ?>
-                </select>
-            </div>
-
-            <!-- Material Document Title -->
-            <div class="form-group">
-                <label>Material / Lecture Title</label>
-                <input type="text" name="title" placeholder="e.g., Week 1: Intro to PHP" required>
-            </div>
-
-            <!-- File Upload Input Field -->
-            <div class="form-group">
-                <label>Select Document File</label>
-                <input type="file" name="material_file" required>
-            </div>
-
-            <div>
-                <button type="submit" name="upload_material" class="btn btn-submit">Upload Material</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- CURRENT MATERIALS VISUAL LIST -->
-    <div class="table-container">
-        <table>
-            <tr>
-                <th>Course Name</th>
-                <th>Material Title</th>
-                <th>Uploaded Filename</th>
-                <th>Date Added</th>
-                <th>Action</th>
-            </tr>
-
-            <?php
-            // SQL JOIN: Pulls the correct descriptive course text string instead of numeric cross-reference identifiers
-            $query = "SELECT m.id AS material_id, m.title, m.file_path, m.uploaded_at, c.course_name 
-                      FROM course_materials m
-                      JOIN courses c ON m.course_id = c.id
-                      ORDER BY m.id DESC";
-                      
-            $result = mysqli_query($conn, $query);
-
-            if (mysqli_num_rows($result) > 0) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                    ?>
-                    <tr>
-                        <td><strong><?php echo htmlspecialchars($row['course_name']); ?></strong></td>
-                        <td><?php echo htmlspecialchars($row['title']); ?></td>
-                        <td><code><?php echo basename($row['file_path']); ?></code></td>
-                        <td><?php echo date('M d, Y', strtotime($row['uploaded_at'])); ?></td>
-                        <td>
-                            <a href="?delete_id=<?php echo $row['material_id']; ?>" 
-                               class="btn btn-delete" 
-                               onclick="return confirm('Are you sure you want to permanently delete this material file?');">
-                               Delete
-                            </a>
-                        </td>
-                    </tr>
-                    <?php
+                } else {
+                    echo "<tr><td colspan='5'>No documents or resource materials uploaded yet.</td></tr>";
                 }
-            } else {
-                echo "<tr><td colspan='5'>No documents or resource materials uploaded yet.</td></tr>";
-            }
-            ?>
-        </table>
+                ?>
+            </table>
+        </div>
+        
     </div>
+
+    <!-- MATCHED FOOTER COMPLEX -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-left">
+                <h3>Contact Us</h3>
+                <p>📞 Call: 0114325690</p>
+                <p>✉️ Email: nexusuniversity@gmail.com</p>
+                <p>📍 Address: Nexus University, New Kandy Road, Malabe</p>
+            </div>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=..." style="border:0;" loading="lazy" aria-hidden="false"></iframe>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
+        </div>
+    </footer>
 
 </body>
 </html>

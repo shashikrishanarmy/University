@@ -243,6 +243,7 @@ if (isset($_GET['edit'])) {
         <div>
              <a href="../index.php">HOME</a>
             <a href="../admin/coursesdash.php">COURSES</a>
+            <a href="../admin/manage_enrollments.php">ENROLLMENTS</a>
             <a href="../admin/manage_materials.php">MATERIALS</a>
             <a href="../admin/view_submissions.php">SUBMISSIONS</a>
             <a href="../admin/manage_assignments.php">ASSIGNMENTS</a>

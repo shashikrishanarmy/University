@@ -1,159 +1,260 @@
 <?php
-// Start session to identify the logged-in student
 session_start();
 include '../config/db.php';
 
-// Mocking session for testing if your login system isn't active yet.
-// REMOVE these two lines once actual login session $_SESSION['user_id'] is set.
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 1; 
+// 1. SMART GATEKEEPER: Detect whatever session key your login page uses
+$student_id = 0;
+
+if (isset($_SESSION['student_id'])) {
+    $student_id = intval($_SESSION['student_id']);
+} elseif (isset($_SESSION['user_id'])) {
+    $student_id = intval($_SESSION['user_id']);
+} elseif (isset($_SESSION['id'])) {
+    $student_id = intval($_SESSION['id']);
 }
 
-$student_id = $_SESSION['user_id'];
+// If no valid session key is found at all, redirect to login page
+if ($student_id === 0) {
+    header("Location: ../auth/login.php");
+    exit();
+}
+
+$message = "";
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>NEXUS UNIVERSITY - My Lecture Timetable</title>
+    <meta charset="UTF-8">
+    <title>NEXUS UNIVERSITY - My Schedule</title>
     <style>
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            margin: 0; font-family: Arial, sans-serif;
-            background-color: #7480b5ff; padding-top: 110px;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #7480b5ff;
+            padding-top: 110px;
         }
+
         nav {
-            background: #0b1d51; padding: 15px; display: flex;
-            justify-content: space-between; align-items: center;
-            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: #0b1d51;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
-        nav a { color: white; text-decoration: none; margin: 10px; }
-        nav a:hover { color: gold; }
-        .logo-section { display: flex; align-items: center; gap: 10px; }
-        .logo { width: 50px; height: 50px; border-radius: 50%; }
-        
-        .title { text-align: center; padding: 20px; color: #0b1d51; }
-        .container { width: 85%; margin: 0 auto 60px auto; }
-        
-        /* Table Container Styles */
-        .timetable-box {
-            background: white; padding: 20px; border-radius: 8px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 10px;
         }
-        
+
+        nav a:hover {
+            color: gold;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .logo-section h2 {
+            color: white;
+            margin: 0;
+        }
+
+        .title {
+            text-align: center;
+            padding: 20px 20px;
+        }
+
+        .title h1 {
+            color: #0b1d51;
+            font-size: 40px;
+            margin: 0 0 10px 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            margin-bottom: 60px;
+        }
+
         table {
-            width: 100%; border-collapse: collapse; background: white;
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
         }
-        table th {
-            background: #0b1d51; color: white; padding: 15px; text-align: left;
+
+        th {
+            background: #0b1d51;
+            color: white;
+            padding: 15px;
         }
-        table td {
-            padding: 15px; text-align: left; border-bottom: 1px solid #ddd;
+
+        td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: center;
         }
-        table tr:hover { background: #f9f9f9; }
-        
-        /* Badges styling */
-        .badge-live {
-            background: #28a745; color: white; padding: 5px 8px; 
-            border-radius: 4px; font-weight: bold; font-size: 12px;
+
+        table tr:hover {
+            background: #f2f2f2;
         }
-        .badge-upcoming {
-            background: #007bff; color: white; padding: 5px 8px; 
-            border-radius: 4px; font-weight: bold; font-size: 12px;
+
+        .no-records {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            font-weight: bold;
+            color: #0b1d51;
+            font-size: 18px;
         }
-        .no-data {
-            text-align: center; padding: 30px; color: #6c757d; font-style: italic;
+
+        footer {
+            background: #0b1d51;
+            color: white;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-left p {
+            margin: 5px 0;
+        }
+
+        .map-container iframe {
+            width: 300px;
+            height: 200px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 15px;
+            border-top: 1px solid #ffffff33;
+            padding-top: 10px;
         }
     </style>
 </head>
+
 <body>
 
+    <!-- NAV BAR WITH UNIVERSITY LOGO -->
     <nav>
         <div class="logo-section">
-            <img src="../assets/images/logo.png" alt="Logo" class="logo">
-            <h2 style="color:white; margin:0;">NEXUS UNIVERSITY</h2>
+            <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
+            <h2>NEXUS UNIVERSITY</h2>
         </div>
         <div>
-            <a href="dashboard.php">DASHBOARD</a>
-            <a href="view_materials.php">MATERIALS</a>
-            <a href="view_timetable.php" style="color:gold;">TIMETABLE</a>
-            <a href="assignments.php">ASSIGNMENTS</a>
-            <a href="../auth/logout.php">LOGOUT</a>
+            <a href="../users/home.php">DASHBOARD</a>
+            <a href="../users/view_timetable.php">TIMETABLE</a>
+            <a href="../auth/logout.php">LOGOUT</a> 
         </div>
     </nav>
 
-    <div class="title">
-        <h1>My Lecture Schedule</h1>
-    </div>
+    <!-- HEADER BLOCK -->
+    <section class="title">
+        <h1>My Lecture Timetable</h1>
+        <p style="color: #0b1d51; font-weight: bold;">Showing upcoming sessions based on your registered courses</p>
+    </section>
 
     <div class="container">
-        <div class="timetable-box">
+
+        <?php
+        // Database join query using the resolved active user identity
+        $query = "SELECT t.lecture_title, t.schedule_date_time, t.room, c.course_name 
+                  FROM timetables t
+                  INNER JOIN enrollments e ON t.course_id = e.course_id
+                  INNER JOIN courses c ON t.course_id = c.id
+                  WHERE e.student_id = $student_id 
+                    AND t.schedule_date_time >= NOW()
+                  ORDER BY t.schedule_date_time ASC";
+
+        $result = mysqli_query($conn, $query);
+
+        if($result && mysqli_num_rows($result) > 0) {
+        ?>
+            <!-- TIMETABLE DISPLAY GRID -->
             <table>
                 <thead>
                     <tr>
-                        <th>Course</th>
-                        <th>Lecture Topic</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Venue / Room</th>
-                        <th>Status</th>
+                        <th>Course Module</th>
+                        <th>Lecture Session Title</th>
+                        <th>Scheduled Date & Time</th>
+                        <th>Room Location</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    // Set timezone to match your system location
-                    date_default_timezone_set('Asia/Colombo');
-                    $current_time = date('Y-m-d H:i:s');
-
-                    // SQL JOIN: Look up scheduled classes for courses this specific student is enrolled in.
-                    // Orders them chronological so the closest lecture shows first.
-                    $query = "SELECT t.*, c.course_name 
-                              FROM timetables t
-                              JOIN courses c ON t.course_id = c.id
-                              JOIN enrollments e ON c.id = e.course_id
-                              WHERE e.student_id = $student_id AND t.schedule_date_time >= '$current_time'
-                              ORDER BY t.schedule_date_time ASC";
-
-                    $result = mysqli_query($conn, $query);
-
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            $lecture_timestamp = strtotime($row['schedule_date_time']);
-                            
-                            // Split the full DATETIME into cleaner visual formats
-                            $date_display = date('l, M d, Y', $lecture_timestamp);
-                            $time_display = date('h:i A', $lecture_timestamp);
-                            
-                            // Calculate if a class starts within the next hour to label it as "Happening Soon"
-                            $time_diff = $lecture_timestamp - time();
-                            $is_soon = ($time_diff > 0 && $time_diff <= 3600);
+                    <?php while($row = mysqli_fetch_assoc($result)) { ?>
+                    <tr>
+                        <td><strong><?php echo htmlspecialchars($row['course_name']); ?></strong></td>
+                        <td><?php echo htmlspecialchars($row['lecture_title']); ?></td>
+                        <td>
+                            <?php 
+                            // Formats the raw timestamp cleanly into a user-friendly layout
+                            echo date('D, M d, Y - h:i A', strtotime($row['schedule_date_time'])); 
                             ?>
-                            
-                            <tr>
-                                <td><strong><?php echo htmlspecialchars($row['course_name']); ?></strong></td>
-                                <td><?php echo htmlspecialchars($row['lecture_title']); ?></td>
-                                <td><?php echo $date_display; ?></td>
-                                <td><?php echo $time_display; ?></td>
-                                <td>📍 <?php echo htmlspecialchars($row['room']); ?></td>
-                                <td>
-                                    <?php if ($is_soon): ?>
-                                        <span class="badge-live">Starts Soon</span>
-                                    <?php else: ?>
-                                        <span class="badge-upcoming">Scheduled</span>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                            
-                            <?php
-                        }
-                    } else {
-                        echo "<tr><td colspan='6' class='no-data'>No upcoming scheduled lectures found for your courses.</td></tr>";
-                    }
-                    ?>
+                        </td>
+                        <td>
+                            <span style="background: #eef0f8; padding: 4px 10px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold;">
+                                <?php echo htmlspecialchars($row['room']); ?>
+                            </span>
+                        </td>
+                    </tr>
+                    <?php } ?>
                 </tbody>
             </table>
-        </div>
+        <?php 
+        } else { 
+            // Informational screen layout displayed if query empty
+            echo "<div class='no-records'>📅 No upcoming lectures scheduled for your enrolled courses right now.</div>";
+        } 
+        ?>
+
     </div>
+
+    <!-- CLEAN COHESIVE FOOTER PANEL -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-left">
+                <h3>Contact Us</h3>
+                <p>📞 Call: 0114325690</p>
+                <p>✉️ Email: nexusuniversity@gmail.com</p>
+                <p>📍 Address: Nexus University, New Kandy Road, Malabe</p>
+            </div>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=..." style="border:0;" loading="lazy"></iframe>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
+        </div>
+    </footer>
 
 </body>
 </html>
