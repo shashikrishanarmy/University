@@ -247,10 +247,7 @@ if(isset($_POST['login'])){
 
         </form>
 
-        <div class="footer-text">
-            Don't have an account?
-            <a href="signup.php">Sign Up</a>
-        </div>
+       
 
     </div>
 

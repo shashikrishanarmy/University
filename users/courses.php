@@ -62,19 +62,53 @@ include '../config/db.php';
 
         .title {
             text-align: center;
-            padding: 40px 20px;
+            padding: 40px 20px 20px 20px;
         }
 
         .title h1 {
             color: #0b1d51;
-            font-size: 40px; /* Fixed font rule layout split syntax */
+            font-size: 40px;
             margin: 0;
+        }
+
+        /* NEW BUTTON ACTION CONTAINER */
+        .action-container {
+            width: 80%;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        /* NEW POLISHED BUTTON VIEW DESIGN */
+        .btn-track {
+            background: #0b1d51;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            font-weight: bold;
+            font-size: 15px;
+            border-radius: 50px; /* Modern rounded look */
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.15);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        /* HOVER INTERACTION STATE */
+        .btn-track:hover {
+            background: white;
+            color: #0b1d51;
+            border-color: #0b1d51;
+            transform: translateY(-2px); /* Subtle click-me lift animation */
+            box-shadow: 0px 6px 12px rgba(0,0,0,0.25);
         }
 
         .table-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 60px; /* FIXED: Removed the space and colon syntax bug */
+            margin-bottom: 60px;
         }
 
         table {
@@ -104,7 +138,7 @@ include '../config/db.php';
             background: #0b1d51;
             color: white;
             padding: 20px;
-            margin-top: 60px; /* EXTRA INSURANCE: Adds spacing above footer globally */
+            margin-top: 60px;
         }
 
         .footer-container {
@@ -148,6 +182,12 @@ include '../config/db.php';
     <section class="title">
         <h1>Course Details</h1>
     </section>
+
+    <div class="action-container">
+        <a href="../users/request_courses.php" class="btn-track">
+            📋 Request Courses
+        </a>
+    </div>
 
     <div class="table-container">
         <table>

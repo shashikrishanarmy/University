@@ -134,7 +134,8 @@ while ($row = mysqli_fetch_assoc($result)) {
         </div>
         <div>
             <a href="../index.php">HOME</a>
-            <a href="../admin/dashboard.php">ADMIN PANEL</a>
+            <a href="../admin/dashboard.php">PANEL</a>
+            <a href="../admin/manage_requests.php">REQUESTS</a>
             <a href="../admin/coursesdash.php">COURSES</a>
             <a href="../admin/manage_enrollments.php">ENROLLMENTS</a>
             <a href="../admin/manage_materials.php">MATERIALS</a>
@@ -163,7 +164,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                     <option value="visible">Visible</option>
                     <option value="hidden">Hidden</option>
                 </select>
-                <button name="add">Add Course</button>
+                <button type="submit" name="add">Add Course</button>
             </form>
         </div>
 
