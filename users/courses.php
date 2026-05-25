@@ -1,29 +1,24 @@
 <?php
-
 include '../config/db.php';
-
-
 ?>
 
-
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>NEXUS UNIVERSITY</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
 
-     * {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    font-family: Arial;
-    background-color: #7480b5ff;
-    padding-top: 110px;
-}
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #7480b5ff;
+            padding-top: 110px;
+        }
 
         nav {
             background: #0b1d51;
@@ -38,20 +33,18 @@ body {
             z-index: 1000;
         }
 
-       
-        nav a{
-            color:white;
-            text-decoration:none;
-            margin:10px;
-
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 10px;
         }
 
-        nav a:hover{
-            color:gold;
+        nav a:hover {
+            color: gold;
         }
 
         .logo-section {
-             display: flex;
+            display: flex;
             align-items: center;
             gap: 10px;
         }
@@ -67,173 +60,138 @@ body {
             margin: 0;
         }
 
-        .title{
-            text-align:center;
-            padding:40px 20px;
+        .title {
+            text-align: center;
+            padding: 40px 20px;
         }
 
-        .title h1{
-            color:#0b1d51;
-            font: size 40px;
+        .title h1 {
+            color: #0b1d51;
+            font-size: 40px; /* Fixed font rule layout split syntax */
+            margin: 0;
         }
 
-        .table-container{
-            display:flex;
-            justify-content:center;
-            margin: bottom 60px;
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 60px; /* FIXED: Removed the space and colon syntax bug */
         }
 
-        table{
-
-            width:80%;
-            border-collapse:collapse;
-            background:white;
-            box-shadow:0px 0px 10px rgba(0,0,0,0.1);
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
         }
 
-        table th{
-
-            background:#0b1d51;
-            color:white;
-            padding:15px;
+        table th {
+            background: #0b1d51;
+            color: white;
+            padding: 15px;
         }
 
-        table td{
-
-            padding:15px;
-            text-align:center;
-            border:1px solid #ddd;
+        table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
         }
 
-        table tr:hover{
-
+        table tr:hover {
             background: #f2f2f2;
         }
 
-
         footer {
-    background: #0b1d51;
-    color: white;
-    padding: 20px;
-}
+            background: #0b1d51;
+            color: white;
+            padding: 20px;
+            margin-top: 60px; /* EXTRA INSURANCE: Adds spacing above footer globally */
+        }
 
-/* TOP ROW */
-.footer-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-/* LEFT SIDE */
-.footer-left p {
-    margin: 5px 0;
-}
+        .footer-left p {
+            margin: 5px 0;
+        }
 
-/* RIGHT SIDE (MAP) */
-.map-container iframe {
-    width: 300px;
-    height: 200px;
-}
+        .map-container iframe {
+            width: 300px;
+            height: 200px;
+        }
 
-/* BOTTOM CENTER */
-.footer-bottom {
-    text-align: center;
-    margin-top: 15px;
-    border-top: 1px solid #ffffff33;
-    padding-top: 10px;
-}
-       
-
+        .footer-bottom {
+            text-align: center;
+            margin-top: 15px;
+            border-top: 1px solid #ffffff33;
+            padding-top: 10px;
+        }
     </style>
- </head>
+</head>
  
- <body>
+<body>
 
-   <nav>
+    <nav>
         <div class="logo-section">
-        <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
-        <h2 style="color:white;">NEXUS UNIVERSITY</h2>
+            <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
+            <h2 style="color:white;">NEXUS UNIVERSITY</h2>
         </div>
-
         <div>
             <a href="../index.php">HOME</a>
             <a href="../users/courses.php">COURSES</a>
-           <!-- <a href="gallery.php">GALLERY</a> -->
-           <!-- <a href="contact.php">CONTACT US</a> -->
-
             <a href="../auth/login.php">LOGIN</a>
-           <!-- <a href="auth/signup.php">SIGNUP</a> -->
         </div>
     </nav>
 
-<section class="title">
-    <h1> Course Details </h1>
-</section>
+    <section class="title">
+        <h1>Course Details</h1>
+    </section>
 
-<div class="table-container">
-
+    <div class="table-container">
         <table>
-
             <tr>
-                <th> Course ID </th>
-                <th> Course Name </th>
-                <th> Duration </th>
-                <th> Fee </th>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th>Duration</th>
+                <th>Fee</th>
             </tr>
 
             <?php
-
             $querry = "SELECT * FROM courses";
-
             $result = mysqli_query($conn, $querry);
 
             while($row = mysqli_fetch_assoc($result)){
-                ?>
-
+            ?>
                 <tr>
-                <td> <?php echo $row['id']; ?></td>
-                <td> <?php echo $row['course_name'];?></td>
-                <td> <?php echo $row['duration']; ?></td>
-                <td> <?php echo number_format($row['fee']); ?></td>
-            </tr>
+                    <td><?php echo htmlspecialchars($row['id']); ?></td>
+                    <td><?php echo htmlspecialchars($row['course_name']); ?></td>
+                    <td><?php echo htmlspecialchars($row['duration']); ?></td>
+                    <td><?php echo number_format($row['fee']); ?></td>
+                </tr>
             <?php
             }
-
             ?>
         </table>
-</div>
-
-   <footer>
-
-    <!-- TOP ROW -->
-    <div class="footer-container">
-
-        <div class="footer-left">
-            <h3>Contact Us</h3>
-            <p>📞 Call: 0114325690</p>
-            <p>✉️ Email: nexusuniversity@gmail.com</p>
-            <p>📍 Address: Nexus University, New Kandy Road, Malabe</p>
-        </div>
-
-        <div class="map-container">
-            <iframe 
-                src="https://www.google.com/maps/embed?pb=..."
-                style="border:0;" 
-                loading="lazy">
-            </iframe>
-        </div>
-
     </div>
 
-    <!-- BOTTOM ROW -->
-    <div class="footer-bottom">
-        <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
-    </div>
-
-</footer>
-
-
-
+    <footer>
+        <div class="footer-container">
+            <div class="footer-left">
+                <h3>Contact Us</h3>
+                <p>📞 Call: 0114325690</p>
+                <p>✉️ Email: nexusuniversity@gmail.com</p>
+                <p>📍 Address: Nexus University, New Kandy Road, Malabe</p>
+            </div>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=..." style="border:0;" loading="lazy"></iframe>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
+        </div>
+    </footer>
 
 </body>
 </html>

@@ -171,9 +171,11 @@ $message = "";
             <h2>NEXUS UNIVERSITY</h2>
         </div>
         <div>
-            <a href="../users/home.php">DASHBOARD</a>
+            <a href="../users/home.php" style="color:gold;">HOME</a>
+            <a href="../users/view_materials.php">MATERIALS</a>
+            <a href="../users/assignments.php">ASSIGNMENTS</a>
             <a href="../users/view_timetable.php">TIMETABLE</a>
-            <a href="../auth/logout.php">LOGOUT</a> 
+            <a href="../auth/logout.php">LOGOUT</a>
         </div>
     </nav>
 

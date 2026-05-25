@@ -226,21 +226,11 @@ $result = mysqli_query($conn, $query);
 
     <div>
 
-        <a href="../users/home.php" style="color:gold;">
-            HOME
-        </a>
-
-        <a href="../users/view_materials.php">
-            MATERIALS
-        </a>
-
-        <a href="../users/assignments.php">
-            ASSIGNMENTS
-        </a>
-
-        <a href="../auth/logout.php">
-            LOGOUT
-        </a>
+        <a href="../users/home.php" style="color:gold;">HOME</a>
+        <a href="../users/view_materials.php">MATERIALS</a>
+        <a href="../users/assignments.php">ASSIGNMENTS</a>
+        <a href="../users/view_timetable.php">TIMETABLE</a>
+        <a href="../auth/logout.php">LOGOUT</a>
 
     </div>
 

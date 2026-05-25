@@ -298,12 +298,14 @@ if(isset($_POST['update_assignment'])){
             <h2>NEXUS UNIVERSITY</h2>
         </div>
         <div>
-             <a href="../index.php">HOME</a>
+            <a href="../index.php">HOME</a>
+            <a href="../admin/dashboard.php">ADMIN PANEL</a>
             <a href="../admin/coursesdash.php">COURSES</a>
             <a href="../admin/manage_enrollments.php">ENROLLMENTS</a>
             <a href="../admin/manage_materials.php">MATERIALS</a>
             <a href="../admin/view_submissions.php">SUBMISSIONS</a>
             <a href="../admin/manage_assignments.php">ASSIGNMENTS</a>
+            <a href="../admin/manage_timetable.php">TIMETABLE</a>
             <a href="../auth/logout.php">LOGOUT</a> 
         </div>
     </nav>
