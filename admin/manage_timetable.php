@@ -135,6 +135,21 @@ if(isset($_POST['update_timetable'])){
             margin: 0 0 10px 0;
         }
 
+        /* TIMEOUT ALERT POPUP CONTAINER */
+        .alert-box {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 12px;
+            width: 50%;
+            margin: 15px auto 0 auto;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+
         .container {
             width: 80%;
             margin: auto;
@@ -252,7 +267,6 @@ if(isset($_POST['update_timetable'])){
 </head>
 <body>
 
-    <!-- MATCHED NAVIGATION BAR -->
     <nav>
         <div class="logo-section">
             <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
@@ -271,17 +285,18 @@ if(isset($_POST['update_timetable'])){
         </div>
     </nav>
 
-    <!-- PAGE HEADER -->
     <section class="title">
         <h1>Manage Lecture Timetables</h1>
+        
         <?php if(!empty($message)): ?>
-            <p style="color: green; font-weight: bold; text-align: center;"><?php echo htmlspecialchars($message); ?></p>
+            <div id="status-alert" class="alert-box">
+                <?php echo htmlspecialchars($message); ?>
+            </div>
         <?php endif; ?>
     </section>
 
     <div class="container">
 
-        <!-- ADD TIMETABLE ENTRY FORM -->
         <form method="POST">
             <h3>Schedule a New Lecture</h3>
 
@@ -303,7 +318,6 @@ if(isset($_POST['update_timetable'])){
             <button type="submit" name="add_timetable">Schedule Lecture</button>
         </form>
 
-        <!-- TIMETABLE LIST VIEW -->
         <table>
             <thead>
                 <tr>
@@ -335,7 +349,6 @@ if(isset($_POST['update_timetable'])){
             </tbody>
         </table>
 
-        <!-- EDIT ENTRY FORM (REVEALED ONLY DURING ACTION HOOK) -->
         <?php
         if(isset($_GET['edit'])){
             $id = intval($_GET['edit']);
@@ -370,7 +383,6 @@ if(isset($_POST['update_timetable'])){
 
     </div>
 
-    <!-- MATCHED FOOTER COMPLEX -->
     <footer>
         <div class="footer-container">
             <div class="footer-left">
@@ -387,6 +399,23 @@ if(isset($_POST['update_timetable'])){
             <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const alertElement = document.getElementById("status-alert");
+            if (alertElement) {
+                // Keep visible for 3.5 seconds, then transition transparency
+                setTimeout(function() {
+                    alertElement.style.opacity = "0";
+                    
+                    // Completely discard the layout element space after fade structural cycle drops
+                    setTimeout(function() {
+                        alertElement.remove();
+                    }, 500);
+                }, 3500);
+            }
+        });
+    </script>
 
 </body>
 </html>

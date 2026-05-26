@@ -24,7 +24,7 @@ if(isset($_POST['login'])){
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['role'] = $user['role'];
 
-            /* ROLE BASED REDIRECT */
+            // ROLE BASED REDIRECT 
             if($user['role'] == 'admin'){
                 header("Location: ../admin/dashboard.php");
             }else{

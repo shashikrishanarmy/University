@@ -98,7 +98,6 @@ if(isset($_POST['update_assignment'])){
     header("Location: manage_assignments.php?msg=updated");
     exit();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -125,9 +124,7 @@ if(isset($_POST['update_assignment'])){
             justify-content: space-between;
             align-items: center;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             z-index: 1000;
         }
 
@@ -167,6 +164,21 @@ if(isset($_POST['update_assignment'])){
             color: #0b1d51;
             font-size: 40px;
             margin: 0 0 10px 0;
+        }
+
+        /* NEW STYLE: ALERT SUCCESS DISAPPEAR CONTAINER BOX */
+        .alert-box {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 12px;
+            width: 50%;
+            margin: 15px auto 0 auto;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
         }
 
         .container {
@@ -246,17 +258,9 @@ if(isset($_POST['update_assignment'])){
             margin: 2px;
         }
 
-        .edit {
-            background: orange;
-        }
-
-        .delete {
-            background: red;
-        }
-
-        .view-btn {
-            background: #007bff;
-        }
+        .edit { background: orange; }
+        .delete { background: red; }
+        .view-btn { background: #007bff; }
 
         footer {
             background: #0b1d51;
@@ -271,15 +275,8 @@ if(isset($_POST['update_assignment'])){
             align-items: center;
         }
 
-        .footer-left p {
-            margin: 5px 0;
-        }
-
-        .map-container iframe {
-            width: 300px;
-            height: 200px;
-        }
-
+        .footer-left p { margin: 5px 0; }
+        .map-container iframe { width: 300px; height: 200px; }
         .footer-bottom {
             text-align: center;
             margin-top: 15px;
@@ -288,10 +285,8 @@ if(isset($_POST['update_assignment'])){
         }
     </style>
 </head>
-
 <body>
 
-    <!-- MATCHED NAVIGATION BAR WITH LOGO PANEL -->
     <nav>
         <div class="logo-section">
             <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
@@ -310,17 +305,18 @@ if(isset($_POST['update_assignment'])){
         </div>
     </nav>
 
-    <!-- MATCHED PAGE HEADER LAYOUT -->
     <section class="title">
         <h1>Manage Assignments</h1>
+        
         <?php if(!empty($message)): ?>
-            <p style="color: green; font-weight: bold; text-align: center;"><?php echo htmlspecialchars($message); ?></p>
+            <div id="status-alert" class="alert-box">
+                <?php echo htmlspecialchars($message); ?>
+            </div>
         <?php endif; ?>
     </section>
 
     <div class="container">
 
-        <!-- ADD FORM -->
         <form method="POST" enctype="multipart/form-data">
             <h3>Add Assignment</h3>
 
@@ -343,7 +339,6 @@ if(isset($_POST['update_assignment'])){
             <button type="submit" name="add_assignment">Add Assignment</button>
         </form>
 
-        <!-- ASSIGNMENTS TABLE -->
         <table>
             <tr>
                 <th>ID</th>
@@ -374,7 +369,6 @@ if(isset($_POST['update_assignment'])){
             <?php } ?>
         </table>
 
-        <!-- EDIT FORM -->
         <?php
         if(isset($_GET['edit'])){
             $id = intval($_GET['edit']);
@@ -399,7 +393,6 @@ if(isset($_POST['update_assignment'])){
 
     </div>
 
-    <!-- MATCHED FOOTER COMPLEX -->
     <footer>
         <div class="footer-container">
             <div class="footer-left">
@@ -416,6 +409,23 @@ if(isset($_POST['update_assignment'])){
             <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const alertElement = document.getElementById("status-alert");
+            if (alertElement) {
+                // Wait 3500ms (3.5 seconds) then trigger the fade transition out effect
+                setTimeout(function() {
+                    alertElement.style.opacity = "0";
+                    
+                    // Wait another 500ms for the styling animation cleanup to clear the space allocation
+                    setTimeout(function() {
+                        alertElement.remove();
+                    }, 500);
+                }, 3500);
+            }
+        });
+    </script>
 
 </body>
 </html>

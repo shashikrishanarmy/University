@@ -1,20 +1,28 @@
 <?php
+// Start session at the very top to preserve feedback message states across header redirections
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 include '../config/db.php';
-
-
 
 // ADD COURSE
 if (isset($_POST['add_course'])) {
-    //real scape is used to psecure purpose and prevent sql injection
     $course_name = mysqli_real_escape_string($conn, $_POST['course_name']);
     $duration = mysqli_real_escape_string($conn, $_POST['duration']);
     $fee = mysqli_real_escape_string($conn, $_POST['fee']);
 
     if (!empty($course_name) && !empty($duration) && !empty($fee)) {
         $insert_query = "INSERT INTO courses (course_name, duration, fee) VALUES ('$course_name', '$duration', '$fee')";
-        mysqli_query($conn, $insert_query);
+        if (mysqli_query($conn, $insert_query)) {
+            $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-success'>Course added successfully!</div>";
+        } else {
+            $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Database Error: Failed to add course.</div>";
+        }
+    } else {
+        $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Error: All form fields are required.</div>";
     }
-    header("Location: " . $_SERVER['PHP_SELF']); // Refresh page to avoid form resubmission
+    header("Location: " . $_SERVER['PHP_SELF']); 
     exit();
 }
 
@@ -26,7 +34,11 @@ if (isset($_POST['update_course'])) {
     $fee = mysqli_real_escape_string($conn, $_POST['fee']);
 
     $update_query = "UPDATE courses SET course_name='$course_name', duration='$duration', fee='$fee' WHERE id=$id";
-    mysqli_query($conn, $update_query);
+    if (mysqli_query($conn, $update_query)) {
+        $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-success'>Course details updated successfully!</div>";
+    } else {
+        $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Database Error: Failed to modify course.</div>";
+    }
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
@@ -35,7 +47,11 @@ if (isset($_POST['update_course'])) {
 if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
     $delete_query = "DELETE FROM courses WHERE id=$id";
-    mysqli_query($conn, $delete_query);
+    if (mysqli_query($conn, $delete_query)) {
+        $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-success'>Course removed successfully!</div>";
+    } else {
+        $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Database Error: Failed to delete course.</div>";
+    }
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
@@ -52,11 +68,19 @@ if (isset($_GET['edit'])) {
         $edit_row = $row;
     }
 }
+
+// Consume current session message to clear it for the next run
+$message = "";
+if (isset($_SESSION['alert_msg'])) {
+    $message = $_SESSION['alert_msg'];
+    unset($_SESSION['alert_msg']);
+}
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>NEXUS UNIVERSITY - Dashboard</title>
     <style>
         * {
@@ -118,6 +142,38 @@ if (isset($_GET['edit'])) {
         .title h1 {
             color: #0b1d51;
             font-size: 40px;
+            margin: 0;
+        }
+
+        /* Message Box Notification Layout */
+        .msg-box { 
+            text-align: center; 
+            margin-bottom: 25px; 
+        }
+
+        /* MODERN SMOOTH FADE ALERT BOX STYLING */
+        .alert-box {
+            padding: 12px;
+            width: 80%;
+            margin: 0 auto;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
         /* Form Container Styles */
@@ -178,7 +234,7 @@ if (isset($_GET['edit'])) {
         .table-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 60px; /* Fixed Typo */
+            margin-bottom: 60px;
         }
 
         table {
@@ -241,7 +297,7 @@ if (isset($_GET['edit'])) {
             <h2>NEXUS UNIVERSITY</h2>
         </div>
         <div>
-             <a href="../index.php">HOME</a>
+            <a href="../index.php">HOME</a>
             <a href="../admin/dashboard.php">ADMIN PANEL</a>
             <a href="../admin/coursesdash.php">COURSES</a>
             <a href="../admin/manage_enrollments.php">ENROLLMENTS</a>
@@ -257,7 +313,8 @@ if (isset($_GET['edit'])) {
         <h1>Courses Dashboard</h1>
     </section>
 
-    <!-- INPUT/EDIT FORM SECTION -->
+    <div class="msg-box"><?php echo $message; ?></div>
+
     <div class="form-container">
         <form action="" method="POST" class="crud-form">
             <input type="hidden" name="course_id" value="<?php echo $edit_row['id']; ?>">
@@ -288,7 +345,6 @@ if (isset($_GET['edit'])) {
         </form>
     </div>
 
-    <!-- DATATABLE VIEW WITH ACTIONS -->
     <div class="table-container">
         <table>
             <tr>
@@ -341,6 +397,23 @@ if (isset($_GET['edit'])) {
             <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const alertElement = document.getElementById("status-alert");
+            if (alertElement) {
+                // Keep notification visible for 3.5 seconds
+                setTimeout(function() {
+                    alertElement.style.opacity = "0";
+                    
+                    // Drop element from DOM hierarchy when fade completes
+                    setTimeout(function() {
+                        alertElement.remove();
+                    }, 500);
+                }, 3500);
+            }
+        });
+    </script>
 
 </body>
 </html>

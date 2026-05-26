@@ -1,21 +1,43 @@
 <?php
+// Start session at the very top to preserve feedback message states across header redirections
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 include '../middleware/admin_auth.php';
 include '../config/db.php';
 
 /* ADD ENROLLMENT */
 if(isset($_POST['add'])){
-    $student_id = $_POST['student_id'];
-    $course_id  = $_POST['course_id'];
+    // Using intval to securely sanitize input flags and prevent injection anomalies
+    $student_id = intval($_POST['student_id']);
+    $course_id  = intval($_POST['course_id']);
 
-    mysqli_query($conn,
-    "INSERT INTO enrollments(student_id, course_id)
-    VALUES('$student_id', '$course_id')");
+    if ($student_id > 0 && $course_id > 0) {
+        $insert_query = "INSERT INTO enrollments(student_id, course_id) VALUES('$student_id', '$course_id')";
+        if (mysqli_query($conn, $insert_query)) {
+            $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-success'>Student registered and enrolled successfully!</div>";
+        } else {
+            $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Database Error: Failed to complete enrollment.</div>";
+        }
+    } else {
+        $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Error: Please select both a valid student and a course.</div>";
+    }
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
 }
 
 /* DELETE ENROLLMENT */
 if(isset($_GET['delete'])){
-    $id = $_GET['delete'];
-    mysqli_query($conn, "DELETE FROM enrollments WHERE id=$id");
+    $id = intval($_GET['delete']);
+    $delete_query = "DELETE FROM enrollments WHERE id=$id";
+    if (mysqli_query($conn, $delete_query)) {
+        $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-success'>Enrollment record removed successfully.</div>";
+    } else {
+        $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Database Error: Could not delete enrollment record.</div>";
+    }
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
 }
 
 /* FETCH STUDENTS */
@@ -35,6 +57,13 @@ ON enrollments.student_id = users.id
 JOIN courses
 ON enrollments.course_id = courses.id
 ");
+
+// Consume current session message to clear it for the next execution run
+$message = "";
+if (isset($_SESSION['alert_msg'])) {
+    $message = $_SESSION['alert_msg'];
+    unset($_SESSION['alert_msg']);
+}
 ?>
 
 <!DOCTYPE html>
@@ -57,11 +86,44 @@ ON enrollments.course_id = courses.id
         .logo-section { display: flex; align-items: center; gap: 10px; }
         .logo { width: 50px; height: 50px; border-radius: 50%; }
         .title { text-align: center; margin-bottom: 20px; }
-        .title h1 { color: #0b1d51; font-size: 36px; }
+        .title h1 { color: #0b1d51; font-size: 36px; margin-top: 20px; }
+        
         .container {
             width: 85%; margin: auto; margin-bottom: 50px; flex: 1; 
             background: white; padding: 30px; border-radius: 6px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
         }
+
+        /* Message Box Notification Layout Wrapper */
+        .msg-box { 
+            text-align: center; 
+            margin-bottom: 20px; 
+        }
+
+        /* MODERN SMOOTH FADE ALERT BOX STYLING */
+        .alert-box {
+            padding: 12px;
+            width: 100%;
+            margin: 0 auto 15px auto;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
         table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; }
         table th { background: #343a40; color: white; padding: 12px; text-align: left; font-size: 14px; }
         table td { padding: 12px; border: 1px solid #dee2e6; font-size: 14px; }
@@ -71,6 +133,7 @@ ON enrollments.course_id = courses.id
         button:hover { background: #0056b3; }
         .btn-delete { background: #dc3545; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px; font-size: 13px; }
         .btn-delete:hover { background: #bd2130; }
+        
         footer { background: #0b1d51; color: white; padding: 20px; margin-top: 40px; }
         .footer-container { display: flex; justify-content: space-between; align-items: center; }
         .footer-left p { margin: 5px 0; }
@@ -104,6 +167,8 @@ ON enrollments.course_id = courses.id
 
 <div class="container">
 
+    <div class="msg-box"><?php echo $message; ?></div>
+
     <form method="POST">
         <select name="student_id" id="student_select" required>
             <option value="">Select Student</option>
@@ -136,16 +201,20 @@ ON enrollments.course_id = courses.id
             </tr>
         </thead>
         <tbody>
-            <?php while($row = mysqli_fetch_assoc($enrollments)) { ?>
-            <tr>
-                <td><code>#<?php echo $row['id']; ?></code></td>
-                <td><strong><?php echo htmlspecialchars($row['name']); ?></strong></td>
-                <td><?php echo htmlspecialchars($row['course_name']); ?></td>
-                <td>
-                    <a href="?delete=<?php echo $row['id']; ?>" class="btn-delete" onclick="return confirm('Are you sure you want to remove this enrollment?');">Delete</a>
-                </td>
-            </tr>
-            <?php } ?>
+            <?php if (mysqli_num_rows($enrollments) > 0) { 
+                while($row = mysqli_fetch_assoc($enrollments)) { ?>
+                <tr>
+                    <td><code>#<?php echo $row['id']; ?></code></td>
+                    <td><strong><?php echo htmlspecialchars($row['name']); ?></strong></td>
+                    <td><?php echo htmlspecialchars($row['course_name']); ?></td>
+                    <td>
+                        <a href="?delete=<?php echo $row['id']; ?>" class="btn-delete" onclick="return confirm('Are you sure you want to remove this enrollment?');">Delete</a>
+                    </td>
+                </tr>
+                <?php } 
+            } else {
+                echo "<tr><td colspan='4' style='text-align:center;'>No student enrollment records found inside database.</td></tr>";
+            } ?>
         </tbody>
     </table>
 </div>
@@ -168,25 +237,22 @@ ON enrollments.course_id = courses.id
 </footer>
 
 <script>
+// Dynamic Select Controller
 document.getElementById('student_select').addEventListener('change', function() {
     const studentId = this.value;
     const courseDropdown = document.getElementById('course_select');
 
-    // If no student is selected, reset drop option view matrix
     if (!studentId) {
         courseDropdown.innerHTML = '<option value="">Select Course</option>';
         return;
     }
 
-    // Call asynchronous lookup to the get_student_course file
     fetch('get_student_course.php?student_id=' + studentId)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Wipe all baseline options and build ONLY the student's verified request program
                 courseDropdown.innerHTML = `<option value="${data.id}">${data.course_name}</option>`;
             } else {
-                // Fallback option matrix if the user doesn't have an approved/pending record inside request_courses table
                 courseDropdown.innerHTML = '<option value="">❌ No requested course found</option>';
             }
         })
@@ -194,6 +260,22 @@ document.getElementById('student_select').addEventListener('change', function() 
             console.error('Error fetching course data:', error);
             courseDropdown.innerHTML = '<option value="">Error fetching data</option>';
         });
+});
+
+// Auto-Dismiss Interactive Alert Engine
+document.addEventListener("DOMContentLoaded", function() {
+    const alertElement = document.getElementById("status-alert");
+    if (alertElement) {
+        // Keep notification visible for 3.5 seconds
+        setTimeout(function() {
+            alertElement.style.opacity = "0";
+            
+            // Drop element cleanly from active viewport layout when fade completes
+            setTimeout(function() {
+                alertElement.remove();
+            }, 500);
+        }, 3500);
+    }
 });
 </script>
 

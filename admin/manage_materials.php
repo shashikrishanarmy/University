@@ -35,18 +35,18 @@ if (isset($_POST['upload_material'])) {
                                  VALUES ($course_id, '$title', '$target_file')";
                 
                 if (mysqli_query($conn, $insert_query)) {
-                    $message = "<p style='color:green; font-weight:bold; margin:0;'>Material uploaded and saved successfully!</p>";
+                    $message = "<div id='status-alert' class='alert-box alert-success'>Material uploaded and saved successfully!</div>";
                 } else {
-                    $message = "<p style='color:red; font-weight:bold; margin:0;'>Database Error: Failed to log material details.</p>";
+                    $message = "<div id='status-alert' class='alert-box alert-danger'>Database Error: Failed to log material details.</div>";
                 }
             } else {
-                $message = "<p style='color:red; font-weight:bold; margin:0;'>Error: Failed to upload file to the server folder directory.</p>";
+                $message = "<div id='status-alert' class='alert-box alert-danger'>Error: Failed to upload file to the server folder directory.</div>";
             }
         } else {
-            $message = "<p style='color:red; font-weight:bold; margin:0;'>Error: Invalid file format. Only PDF, DOCX, PPTX, TXT, and ZIP are allowed.</p>";
+            $message = "<div id='status-alert' class='alert-box alert-danger'>Error: Invalid file format. Only PDF, DOCX, PPTX, TXT, and ZIP are allowed.</div>";
         }
     } else {
-        $message = "<p style='color:red; font-weight:bold; margin:0;'>Error: All fields are required.</p>";
+        $message = "<div id='status-alert' class='alert-box alert-danger'>Error: All fields are required.</div>";
     }
 }
 
@@ -251,6 +251,31 @@ if (isset($_GET['delete_id'])) {
             text-align: center; 
             margin-bottom: 20px; 
         }
+
+        /* MODERN SMOOTH FADE ALERT BOX STYLING */
+        .alert-box {
+            padding: 12px;
+            width: 60%;
+            margin: 0 auto;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
         
         footer {
             background: #0b1d51;
@@ -284,7 +309,6 @@ if (isset($_GET['delete_id'])) {
 </head>
 <body>
 
-    <!-- MATCHED NAVIGATION BAR WITH LOGO PANEL -->
     <nav>
         <div class="logo-section">
             <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
@@ -303,21 +327,17 @@ if (isset($_GET['delete_id'])) {
         </div>
     </nav>
 
-    <!-- MATCHED PAGE HEADER LAYOUT -->
     <section class="title">
         <h1>Manage Course Learning Materials</h1>
     </section>
 
-    <!-- CONTAINER BLOCK -->
     <div class="container">
 
         <div class="msg-box"><?php echo $message; ?></div>
 
-        <!-- MATERIAL UPLOAD FORM -->
         <div class="form-container">
             <form action="" method="POST" enctype="multipart/form-data" class="upload-form">
                 
-                <!-- Target Course Dropdown -->
                 <div class="form-group">
                     <label>Target Course</label>
                     <select name="course_id" required>
@@ -332,13 +352,11 @@ if (isset($_GET['delete_id'])) {
                     </select>
                 </div>
 
-                <!-- Material Document Title -->
                 <div class="form-group">
                     <label>Material / Lecture Title</label>
                     <input type="text" name="title" placeholder="e.g., Week 1: Intro to PHP" required>
                 </div>
 
-                <!-- File Upload Input Field -->
                 <div class="form-group">
                     <label>Select Document File</label>
                     <input type="file" name="material_file" required>
@@ -350,7 +368,6 @@ if (isset($_GET['delete_id'])) {
             </form>
         </div>
 
-        <!-- CURRENT MATERIALS VISUAL LIST -->
         <div class="table-container">
             <table>
                 <tr>
@@ -396,7 +413,6 @@ if (isset($_GET['delete_id'])) {
         
     </div>
 
-    <!-- MATCHED FOOTER COMPLEX -->
     <footer>
         <div class="footer-container">
             <div class="footer-left">
@@ -413,6 +429,23 @@ if (isset($_GET['delete_id'])) {
             <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const alertElement = document.getElementById("status-alert");
+            if (alertElement) {
+                // Keep the notification up for exactly 3.5 seconds
+                setTimeout(function() {
+                    alertElement.style.opacity = "0";
+                    
+                    // Drop from active layout flow after transition completes
+                    setTimeout(function() {
+                        alertElement.remove();
+                    }, 500);
+                }, 3500);
+            }
+        });
+    </script>
 
 </body>
 </html>

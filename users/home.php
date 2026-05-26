@@ -1,6 +1,67 @@
 <?php
 include '../config/db.php';
 session_start();
+
+// Redirect to login page if user session is not active
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../auth/login.php");
+    exit();
+}
+
+$user_id = intval($_SESSION['user_id']);
+
+
+
+// 1. Get total materials using your accurate course_materials table layout
+$materials_count = 0;
+$mat_query = "
+    SELECT COUNT(cm.id) AS total_materials 
+    FROM course_materials cm
+    JOIN enrollments e ON cm.course_id = e.course_id
+    WHERE e.student_id = $user_id
+";
+$mat_result = mysqli_query($conn, $mat_query);
+if ($mat_result && $mat_row = mysqli_fetch_assoc($mat_result)) {
+    $materials_count = intval($mat_row['total_materials']);
+}
+
+
+$assignments_issued = 0;
+$assignments_submitted = 0;
+$assignments_pending = 0;
+
+// Get the total assignments according to the courses the students enrolled
+$asm_issued_query = "
+    SELECT COUNT(a.id) AS total_issued 
+    FROM assignments a
+    JOIN enrollments e ON a.course_id = e.course_id
+    WHERE e.student_id = $user_id
+";
+$asm_issued_result = mysqli_query($conn, $asm_issued_query);
+if ($asm_issued_result && $issued_row = mysqli_fetch_assoc($asm_issued_result)) {
+    $assignments_issued = intval($issued_row['total_issued']);
+}
+
+// Get total assignments already submitted by logged-in student
+$asm_sub_query = "
+    SELECT COUNT(s.id) AS total_submitted 
+    FROM submissions s
+    JOIN assignments a ON s.assignment_id = a.id
+    JOIN enrollments e ON a.course_id = e.course_id
+    WHERE e.student_id = $user_id AND s.user_id = $user_id
+";
+$asm_sub_result = mysqli_query($conn, $asm_sub_query);
+if ($asm_sub_result && $sub_row = mysqli_fetch_assoc($asm_sub_result)) {
+    $assignments_submitted = intval($sub_row['total_submitted']);
+}
+
+// pending assignments check
+$assignments_pending = $assignments_issued - $assignments_submitted;
+
+// protection rule against unexpected null values
+if ($assignments_pending < 0) {
+    $assignments_pending = 0;
+}
 ?>
 
 <!DOCTYPE html>
@@ -9,157 +70,197 @@ session_start();
     <title>NEXUS UNIVERSITY - Student Home</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
 
-* {
-    box-sizing: border-box;
-}
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #7480b5ff;
+            padding-top: 110px;
+        }
 
-body {
-    margin: 0;
-    font-family: Arial;
-    background-color: #7480b5ff;
-    padding-top: 110px;
-}
+        /* NAVBAR */
+        nav {
+            background: #0b1d51;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
 
-/* NAVBAR */
-nav {
-    background: #0b1d51;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-}
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 10px;
+        }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    margin: 10px;
-}
+        nav a:hover {
+            color: gold;
+        }
 
-nav a:hover {
-    color: gold;
-}
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.logo-section {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
 
-.logo {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-}
+        /* HERO SECTION */
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+        }
 
-/* HERO SECTION */
-.hero {
-    text-align: center;
-    padding: 50px 20px;
-}
+        .hero h1 {
+            color: #0b1d51;
+            font-size: 42px;
+        }
 
-.hero h1 {
-    color: #0b1d51;
-    font-size: 42px;
-}
+        .hero p {
+            font-size: 18px;
+            color: #333;
+        }
 
-.hero p {
-    font-size: 18px;
-    color: #333;
-}
+        /* FEATURE CARDS SYSTEM */
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
 
-/* FEATURE CARDS */
-.cards {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-    padding: 30px;
-}
+        .card {
+            background: white;
+            width: 320px; /* Widened slightly to fit breakdown lists beautifully */
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-.card {
-    background: white;
-    width: 280px;
-    padding: 25px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-}
+        .card h3 {
+            color: #0b1d51;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
 
-.card h3 {
-    color: #0b1d51;
-}
+        .card p {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
 
-.card p {
-    color: #555;
-}
+        
+        .counter-badge {
+            display: inline-block;
+            background-color: #dc3545; /* Notification Red */
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
 
-.card a {
-    display: inline-block;
-    margin-top: 15px;
-    padding: 10px 15px;
-    background: #0b1d51;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-}
+        
+        .badge-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
 
-.card a:hover {
-    background: #142c7a;
-}
+        .badge-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            background: #f8f9fa;
+            border-left: 4px solid #7480b5ff;
+        }
 
-/* FOOTER */
-footer {
-    background: #0b1d51;
-    color: white;
-    padding: 20px;
-}
+        .badge-count {
+            padding: 2px 8px;
+            border-radius: 10px;
+            color: white;
+            font-size: 12px;
+        }
 
-/* TOP ROW */
-.footer-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        
+        .card a {
+            display: inline-block;
+            margin-top: auto;
+            padding: 10px 15px;
+            background: #0b1d51;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            width: 100%;
+            font-weight: bold;
+        }
 
-/* LEFT SIDE */
-.footer-left p {
-    margin: 5px 0;
-}
+        .card a:hover {
+            background: #142c7a;
+            color: gold;
+        }
 
-/* RIGHT SIDE (MAP) */
-.map-container iframe {
-    width: 300px;
-    height: 200px;
-}
+        
+        footer {
+            background: #0b1d51;
+            color: white;
+            padding: 20px;
+            margin-top: 40px;
+        }
 
-/* BOTTOM */
-.footer-bottom {
-    text-align: center;
-    margin-top: 15px;
-    border-top: 1px solid #ffffff33;
-    padding-top: 10px;
-}
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
+        .footer-left p { margin: 5px 0; }
+        .map-container iframe { width: 300px; height: 200px; }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 15px;
+            border-top: 1px solid #ffffff33;
+            padding-top: 10px;
+        }
     </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
 <nav>
     <div class="logo-section">
         <img src="../assets/images/logo.png" alt="Logo" class="logo">
-        <h2 style="color:white;">NEXUS UNIVERSITY</h2>
+        <h2 style="color:white; margin:0;">NEXUS UNIVERSITY</h2>
     </div>
 
     <div>
-        <a href="../users/home.php" style="color:gold;">HOME</a>
+        <a href="../users/home.php" style="color:gold;">STUDENT PANEL</a>
         <a href="../users/view_materials.php">MATERIALS</a>
         <a href="../users/assignments.php">ASSIGNMENTS</a>
         <a href="../users/view_timetable.php">TIMETABLE</a>
@@ -167,40 +268,56 @@ footer {
     </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
     <h1>Welcome to Nexus University</h1>
     <p>Explore courses, access study materials, and enhance your learning experience.</p>
 </section>
 
-<!-- FEATURE CARDS -->
 <section class="cards">
 
     <div class="card">
-        <h3>📚 Courses</h3>
-        <p>View all available courses and enroll easily.</p>
-        <a href="../users/courses.php">Go to Courses</a>
+        <div>
+            <h3>📄 Materials</h3>
+            <p>Count of the Available Lecture Materials</p>
+        </div>
+        <div style="margin: 20px 0;">
+            <div class="counter-badge">
+                📚 <?php echo $materials_count; ?> Available
+            </div>
+        </div>
+        
     </div>
 
     <div class="card">
-        <h3>📄 Materials</h3>
-        <p>Download lecture notes and study resources.</p>
-        <a href="../users/view_materials.php">View Materials</a>
-    </div>
+        <div>
+            <h3>🎓 Assignments</h3>
+            <p>Academic Tracker Summary Matrix</p>
+        </div>
+        
+        <div class="badge-list">
+            <div class="badge-row" style="border-left-color: #0b1d51;">
+                <span>📋 Total Issued Tasks</span>
+                <span class="badge-count" style="background: #0b1d51;"><?php echo $assignments_issued; ?></span>
+            </div>
+            
+            <div class="badge-row" style="border-left-color: #28a745;">
+                <span>✅ Submitted Solutions</span>
+                <span class="badge-count" style="background: #28a745;"><?php echo $assignments_submitted; ?></span>
+            </div>
+            
+            <div class="badge-row" style="border-left-color: #dc3545;">
+                <span>⏳ Still To Be Submitted</span>
+                <span class="badge-count" style="background: #dc3545;"><?php echo $assignments_pending; ?></span>
+            </div>
+        </div>
 
-    <div class="card">
-        <h3>🎓 My Learning</h3>
-        <p>Track your academic progress and activities.</p>
-        <a href="#">Coming Soon</a>
+        
     </div>
 
 </section>
 
-<!-- FOOTER -->
 <footer>
-
     <div class="footer-container">
-
         <div class="footer-left">
             <h3>Contact Us</h3>
             <p>📞 Call: 0114325690</p>
@@ -215,13 +332,11 @@ footer {
                 loading="lazy">
             </iframe>
         </div>
-
     </div>
 
     <div class="footer-bottom">
         <p>© 2026 NEXUS UNIVERSITY | All Rights Reserved</p>
     </div>
-
 </footer>
 
 </body>
