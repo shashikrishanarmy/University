@@ -12,7 +12,7 @@ $user_id = intval($_SESSION['user_id']);
 
 
 
-// 1. Get total materials using your accurate course_materials table layout
+// Get total materials using course_materials table 
 $materials_count = 0;
 $mat_query = "
     SELECT COUNT(cm.id) AS total_materials 
@@ -117,7 +117,7 @@ if ($assignments_pending < 0) {
             border-radius: 50%;
         }
 
-        /* HERO SECTION */
+        
         .hero {
             text-align: center;
             padding: 50px 20px;
@@ -133,7 +133,7 @@ if ($assignments_pending < 0) {
             color: #333;
         }
 
-        /* FEATURE CARDS SYSTEM */
+        
         .cards {
             display: flex;
             justify-content: center;

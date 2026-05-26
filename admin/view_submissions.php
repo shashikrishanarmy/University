@@ -1,15 +1,15 @@
 <?php
-// Start session at the very top to preserve feedback message states across header redirections
+// Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 include '../config/db.php';
 
-// Initialize session flash framework variables
+
 $message = "";
 
-/* ================= UPDATE / ASSIGN GRADE LOGIC ================= */
+/* UPDATE Part*/
 if (isset($_POST['update_grade'])) {
     $sub_id = intval($_POST['submission_id']);
     $grade = mysqli_real_escape_string($conn, trim($_POST['grade']));
@@ -26,7 +26,7 @@ if (isset($_POST['update_grade'])) {
     exit();
 }
 
-/* ================= DELETE ASSIGNMENT ================= */
+/* DELETE Part */
 if (isset($_GET['delete_id'])) {
     $delete_id = intval($_GET['delete_id']);
 
@@ -51,7 +51,7 @@ if (isset($_GET['delete_id'])) {
     exit();
 }
 
-// Consume current session message to clear it for the next execution run
+
 if (isset($_SESSION['alert_msg'])) {
     $message = $_SESSION['alert_msg'];
     unset($_SESSION['alert_msg']);

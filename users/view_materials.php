@@ -62,13 +62,13 @@ $result = mysqli_query($conn, $query);
             background-color: #7480b5ff;
             padding-top: 100px;
     
-    /* --- THESE 4 LINES FIX THE FOOTER --- */
+    
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Forces body to take full screen height */
+            min-height: 100vh; 
         }
 
-        /* NAVBAR */
+        
         nav{
             background:#0b1d51;
             padding:15px;
@@ -104,7 +104,7 @@ $result = mysqli_query($conn, $query);
             border-radius:50%;
         }
 
-        /* TITLE */
+        
         .title{
             text-align:center;
             margin-bottom:20px;
@@ -115,13 +115,11 @@ $result = mysqli_query($conn, $query);
             font-size:36px;
         }
 
-        /* TABLE CONTAINER */
+        
         .table-container {
             display: flex;
             justify-content: center;
             margin-bottom: 50px;
-    
-        /* --- THIS LINE EXTENDS CONTENT TO PUSH FOOTER DOWN --- */
             flex: 1; 
         }
 
@@ -148,7 +146,7 @@ $result = mysqli_query($conn, $query);
             background:#f2f2f2;
         }
 
-        /* DOWNLOAD BUTTON */
+        
         .btn-download{
             background:#007bff;
             color:white;
@@ -169,7 +167,7 @@ $result = mysqli_query($conn, $query);
             margin-top:30px;
         }
 
-        /* FOOTER STYLING */
+        
         footer {
             background: #0b1d51;
             color: white;
@@ -211,7 +209,7 @@ $result = mysqli_query($conn, $query);
 
 <body>
 
-<!-- NAVBAR -->
+
 <nav>
 
     <div class="logo-section">
@@ -236,7 +234,7 @@ $result = mysqli_query($conn, $query);
 
 </nav>
 
-<!-- TITLE -->
+
 <div class="title">
 
     <h1>
@@ -245,7 +243,7 @@ $result = mysqli_query($conn, $query);
 
 </div>
 
-<!-- TABLE -->
+
 <div class="table-container">
 
     <table>
@@ -349,7 +347,6 @@ $result = mysqli_query($conn, $query);
 
 </div>
 
-<!-- INTEGRATED UNIVERSITY FOOTER -->
 <footer>
     <div class="footer-container">
         <div class="footer-left">

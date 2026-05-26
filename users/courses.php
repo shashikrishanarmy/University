@@ -71,7 +71,7 @@ include '../config/db.php';
             margin: 0;
         }
 
-        /* NEW BUTTON ACTION CONTAINER */
+        
         .action-container {
             width: 80%;
             margin: 0 auto 20px auto;
@@ -79,7 +79,7 @@ include '../config/db.php';
             justify-content: flex-start;
         }
 
-        /* NEW POLISHED BUTTON VIEW DESIGN */
+        
         .btn-track {
             background: #0b1d51;
             color: white;
@@ -87,7 +87,7 @@ include '../config/db.php';
             padding: 12px 24px;
             font-weight: bold;
             font-size: 15px;
-            border-radius: 50px; /* Modern rounded look */
+            border-radius: 50px; 
             box-shadow: 0px 4px 6px rgba(0,0,0,0.15);
             display: inline-flex;
             align-items: center;
@@ -96,12 +96,12 @@ include '../config/db.php';
             border: 2px solid transparent;
         }
 
-        /* HOVER INTERACTION STATE */
+        
         .btn-track:hover {
             background: white;
             color: #0b1d51;
             border-color: #0b1d51;
-            transform: translateY(-2px); /* Subtle click-me lift animation */
+            transform: translateY(-2px); 
             box-shadow: 0px 6px 12px rgba(0,0,0,0.25);
         }
 

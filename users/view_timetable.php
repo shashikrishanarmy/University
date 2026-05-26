@@ -2,7 +2,7 @@
 session_start();
 include '../config/db.php';
 
-// 1. SMART GATEKEEPER: Detect whatever session key your login page uses
+
 $student_id = 0;
 
 if (isset($_SESSION['student_id'])) {
@@ -13,7 +13,7 @@ if (isset($_SESSION['student_id'])) {
     $student_id = intval($_SESSION['id']);
 }
 
-// If no valid session key is found at all, redirect to login page
+// If login failed, redirect to login page
 if ($student_id === 0) {
     header("Location: ../auth/login.php");
     exit();
@@ -164,7 +164,7 @@ $message = "";
 
 <body>
 
-    <!-- NAV BAR WITH UNIVERSITY LOGO -->
+    
     <nav>
         <div class="logo-section">
             <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
@@ -179,7 +179,7 @@ $message = "";
         </div>
     </nav>
 
-    <!-- HEADER BLOCK -->
+    
     <section class="title">
         <h1>My Lecture Timetable</h1>
         <p style="color: #0b1d51; font-weight: bold;">Showing upcoming sessions based on your registered courses</p>
@@ -188,7 +188,7 @@ $message = "";
     <div class="container">
 
         <?php
-        // Database join query using the resolved active user identity
+        // Database join query 
         $query = "SELECT t.lecture_title, t.schedule_date_time, t.room, c.course_name 
                   FROM timetables t
                   INNER JOIN enrollments e ON t.course_id = e.course_id
@@ -201,7 +201,7 @@ $message = "";
 
         if($result && mysqli_num_rows($result) > 0) {
         ?>
-            <!-- TIMETABLE DISPLAY GRID -->
+            
             <table>
                 <thead>
                     <tr>
@@ -218,7 +218,7 @@ $message = "";
                         <td><?php echo htmlspecialchars($row['lecture_title']); ?></td>
                         <td>
                             <?php 
-                            // Formats the raw timestamp cleanly into a user-friendly layout
+                            // timestamp
                             echo date('D, M d, Y - h:i A', strtotime($row['schedule_date_time'])); 
                             ?>
                         </td>
@@ -233,14 +233,14 @@ $message = "";
             </table>
         <?php 
         } else { 
-            // Informational screen layout displayed if query empty
+            //else part for no records
             echo "<div class='no-records'>📅 No upcoming lectures scheduled for your enrolled courses right now.</div>";
         } 
         ?>
 
     </div>
 
-    <!-- CLEAN COHESIVE FOOTER PANEL -->
+    
     <footer>
         <div class="footer-container">
             <div class="footer-left">

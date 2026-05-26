@@ -13,7 +13,7 @@ if (isset($_POST['submit_request'])) {
     $nic_or_passport = mysqli_real_escape_string($conn, $_POST['nic_or_passport']);
     $highest_qualification = mysqli_real_escape_string($conn, $_POST['highest_qualification']);
 
-    // INSERTION QUERY: Matches your table name 'request_courses' and schema layout
+    // INSERTION QUERY
     $query = "INSERT INTO request_courses (student_name, contact_number, email, requested_course, nic_or_passport, highest_qualification, status) 
               VALUES ('$student_name', '$contact_number', '$email', '$requested_course', '$nic_or_passport', '$highest_qualification', 'Pending')";
 
