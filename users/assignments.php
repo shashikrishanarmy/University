@@ -383,7 +383,8 @@ if (isset($_SESSION['alert_msg'])) {
             ?>
         </div>
 
-    </div> </div>
+    </div> 
+</div>
 
 <footer>
     <div class="footer-container">
