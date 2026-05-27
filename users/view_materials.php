@@ -61,7 +61,10 @@ $result = mysqli_query($conn, $query);
             font-family: Arial, sans-serif;
             background-color: #7480b5ff;
             padding-top: 100px;
-    
+            background-image: url('../assets/images/books2.jpg');
+            background-size: cover;      
+            background-position: center; 
+            background-repeat: no-repeat;
     
             display: flex;
             flex-direction: column;

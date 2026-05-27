@@ -37,6 +37,10 @@ $message = "";
             font-family: Arial, sans-serif;
             background-color: #7480b5ff;
             padding-top: 110px;
+            background-image: url('../assets/images/assign.jpg');
+            background-size: cover;      
+            background-position: center; 
+            background-repeat: no-repeat;
         }
 
         nav {
@@ -84,10 +88,20 @@ $message = "";
             padding: 20px 20px;
         }
 
+        /* CHANGED: Main Header text color configured to match your gold layout definition */
         .title h1 {
-            color: #0b1d51;
+            color: gold;
             font-size: 40px;
             margin: 0 0 10px 0;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7); /* Optional drop shadow added for high definition readability against background images */
+        }
+
+        /* CHANGED: Subheader description text adjusted to bright white for clean visual contrast against the dark layout */
+        .title p {
+            color: white !important;
+            font-weight: bold;
+            font-size: 16px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
         }
 
         .container {
@@ -182,7 +196,7 @@ $message = "";
     
     <section class="title">
         <h1>My Lecture Timetable</h1>
-        <p style="color: #0b1d51; font-weight: bold;">Showing upcoming sessions based on your registered courses</p>
+        <p>Showing upcoming sessions based on your registered courses</p>
     </section>
 
     <div class="container">

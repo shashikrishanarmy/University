@@ -75,13 +75,17 @@ if ($assignments_pending < 0) {
         }
 
         body {
+            background-image: url('../assets/images/stdash.jpg');
+            background-size: cover;      
+            background-position: center; 
+            background-repeat: no-repeat;
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #7480b5ff;
             padding-top: 110px;
         }
 
-        /* NAVBAR */
+        
         nav {
             background: #0b1d51;
             padding: 15px;
@@ -144,7 +148,7 @@ if ($assignments_pending < 0) {
 
         .card {
             background: white;
-            width: 320px; /* Widened slightly to fit breakdown lists beautifully */
+            width: 320px; 
             padding: 25px;
             border-radius: 10px;
             text-align: center;
@@ -270,7 +274,7 @@ if ($assignments_pending < 0) {
 
 <section class="hero">
     <h1>Welcome to Nexus University</h1>
-    <p>Explore courses, access study materials, and enhance your learning experience.</p>
+    <p style="font-size: 30px;">Explore courses, access study materials, and enhance your learning experience.</p>
 </section>
 
 <section class="cards">
@@ -291,7 +295,7 @@ if ($assignments_pending < 0) {
     <div class="card">
         <div>
             <h3>🎓 Assignments</h3>
-            <p>Academic Tracker Summary Matrix</p>
+            <p>Assignments Summary</p>
         </div>
         
         <div class="badge-list">

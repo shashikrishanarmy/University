@@ -297,8 +297,8 @@ if (isset($_SESSION['alert_msg'])) {
             <h2>NEXUS UNIVERSITY</h2>
         </div>
         <div>
-            <a href="../index.php">HOME</a>
-            <a href="../admin/dashboard.php">ADMIN PANEL</a>
+            <a href="../admin/dashboard.php">PANEL</a>
+            <a href="../admin/manage_requests.php">REQUESTS</a>
             <a href="../admin/coursesdash.php">COURSES</a>
             <a href="../admin/manage_enrollments.php">ENROLLMENTS</a>
             <a href="../admin/manage_materials.php">MATERIALS</a>

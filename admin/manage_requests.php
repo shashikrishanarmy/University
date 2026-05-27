@@ -5,7 +5,7 @@ include '../config/db.php';
 $message = "";
 $msg_style = "";
 
-// ================= ACTION HANDLER: ACCEPT, DECLINE, OR REGISTER =================
+// ACTION HANDLER: ACCEPT, DECLINE, OR REGISTER 
 if (isset($_GET['id']) && isset($_GET['action'])) {
     $request_id = intval($_GET['id']);
     $action = $_GET['action']; 
@@ -143,7 +143,7 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
             <h2>NEXUS UNIVERSITY</h2>
         </div>
         <div>
-            <a href="../index.php">HOME</a>
+            
             <a href="../admin/dashboard.php">PANEL</a>
             <a href="../admin/manage_requests.php">REQUESTS</a>
             <a href="../admin/coursesdash.php">COURSES</a>
@@ -212,7 +212,7 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
                             <?php } elseif($current_status === 'Registered') { ?>
                                 <span style="color: #28a745; font-weight: bold; font-style: normal;">✓ Account Created</span>
                             <?php } else { ?>
-                                <span style="color: #666; font-style: italic;">Declined / Processed</span>
+                                <span style="color: #666; font-style: italic;">Declined</span>
                             <?php } ?>
                         </td>
                     </tr>

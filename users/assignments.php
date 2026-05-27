@@ -1,5 +1,5 @@
 <?php
-// Start session at the very top to preserve feedback message states across header redirections
+// Start session for header redirections
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = intval($_SESSION['user_id']);
 
-// ================= UPLOAD LOGIC =================
+// UPLOAD Logic for Assignment Submissions
 if (isset($_POST['submit_assignment'])) {
     $assignment_id = intval($_POST['assignment_id']);
 
@@ -27,7 +27,7 @@ if (isset($_POST['submit_assignment'])) {
         $target_dir = "../uploads/assignments/";
 
         if (!file_exists($target_dir)) {
-            mkdir($target_dir, 0777, true);
+            mkdir($target_dir, 0777, true); //0777 use in php to give read, write and execute permissions to the folder for all users.
         }
 
         $file_name = time() . "_" . basename($_FILES["assignment_file"]["name"]);
@@ -60,7 +60,7 @@ if (isset($_POST['submit_assignment'])) {
     exit();
 }
 
-// Consume current session message to clear it for the next execution run
+// current session message to clear it for the next execution run
 $message = "";
 if (isset($_SESSION['alert_msg'])) {
     $message = $_SESSION['alert_msg'];
@@ -87,7 +87,7 @@ if (isset($_SESSION['alert_msg'])) {
             min-height: 100vh;
         }
 
-        /* NAVBAR */
+        
         nav {
             background: #0b1d51;
             padding: 15px;
@@ -104,11 +104,11 @@ if (isset($_SESSION['alert_msg'])) {
         .logo-section { display: flex; align-items: center; gap: 10px; }
         .logo { width: 50px; height: 50px; border-radius: 50%; }
 
-        /* TITLE */
+        
         .title { text-align: center; margin-bottom: 10px; }
         .title h1 { color: #0b1d51; font-size: 32px; margin: 10px 0; }
 
-        /* CONTENT CONTAINER AND TWO-COLUMN MATRIX */
+        
         .container {
             width: 95%;
             max-width: 1400px;
@@ -160,7 +160,7 @@ if (isset($_SESSION['alert_msg'])) {
             line-height: 1.4;
         }
 
-        /* RIGHT SIDE COLUMN: GRADED ENTRIES PANEL (30%) */
+        /* RIGHT SIDE COLUMN*/
         .grades-sidebar {
             width: 30%;
             background: white;
@@ -181,7 +181,7 @@ if (isset($_SESSION['alert_msg'])) {
 
         .grade-item {
             background: #f8f9fa;
-            border-left: 4px solid #0b1d51; /* Dark blue academic stripe */
+            border-left: 4px solid #0b1d51; 
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 0 4px 4px 0;
@@ -195,7 +195,7 @@ if (isset($_SESSION['alert_msg'])) {
 
         .grade-badge {
             display: inline-block;
-            background: #28a745; /* Success green background badge for grades */
+            background: #28a745; 
             color: white;
             padding: 2px 6px;
             border-radius: 3px;
@@ -203,7 +203,7 @@ if (isset($_SESSION['alert_msg'])) {
             font-size: 12px;
         }
 
-        /* FLASH ALERT MESSAGE SYSTEM */
+        
         .msg-box { text-align: center; margin-bottom: 15px; }
         .alert-box {
             padding: 10px; width: 100%; border-radius: 5px; font-weight: bold; text-align: center; opacity: 1;
@@ -231,7 +231,7 @@ if (isset($_SESSION['alert_msg'])) {
         .map-container iframe { width: 260px; height: 130px; border: 0; }
         .footer-bottom { text-align: center; margin-top: 10px; border-top: 1px solid #ffffff33; padding-top: 8px; font-size: 12px; }
 
-        /* RESPONSIVE ADAPTATION SETUP */
+        /* RESPONSIVE Web Design */
         @media (max-width: 992px) {
             .main-layout { flex-direction: column-reverse; } 
             .grades-sidebar, .assignment-section { width: 100%; }
@@ -348,7 +348,7 @@ if (isset($_SESSION['alert_msg'])) {
         <div class="grades-sidebar">
             <h2>🎯 My Graded Exercises</h2>
             <?php
-            // Pull details containing Student ID (u.id), Name (u.name), Exercise Title (a.title), and Grade (s.grade)
+            // Fetch details containing Student ID (u.id), Name (u.name), Exercise Title (a.title), and Grade (s.grade)
             $grades_query = "
                 SELECT 
                     u.id AS student_id,

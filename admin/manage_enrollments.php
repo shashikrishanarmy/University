@@ -1,5 +1,5 @@
 <?php
-// Start session at the very top to preserve feedback message states across header redirections
+// Start session for header redirections
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -9,16 +9,26 @@ include '../config/db.php';
 
 /* ADD ENROLLMENT */
 if(isset($_POST['add'])){
-    // Using intval to securely sanitize input flags and prevent injection anomalies
+    // Using intval to securely sanitize input flags and prevent injection 
     $student_id = intval($_POST['student_id']);
     $course_id  = intval($_POST['course_id']);
 
     if ($student_id > 0 && $course_id > 0) {
-        $insert_query = "INSERT INTO enrollments(student_id, course_id) VALUES('$student_id', '$course_id')";
-        if (mysqli_query($conn, $insert_query)) {
-            $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-success'>Student registered and enrolled successfully!</div>";
+        
+        // Check for duplicate enrollment
+        $check_duplicate = mysqli_query($conn, "SELECT id FROM enrollments WHERE student_id = $student_id AND course_id = $course_id");
+        
+        if (mysqli_num_rows($check_duplicate) > 0) {
+            // Intercept action and assign target error statement if validation matches duplicate state
+            $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>User already registered for this course!</div>";
         } else {
-            $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Database Error: Failed to complete enrollment.</div>";
+            // PROCEED TO SAVE ENROLLMENT IF VALIDATION CHECKS OUT
+            $insert_query = "INSERT INTO enrollments(student_id, course_id) VALUES('$student_id', '$course_id')";
+            if (mysqli_query($conn, $insert_query)) {
+                $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-success'>Student registered and enrolled successfully!</div>";
+            } else {
+                $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Database Error: Failed to complete enrollment.</div>";
+            }
         }
     } else {
         $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Error: Please select both a valid student and a course.</div>";
@@ -43,7 +53,7 @@ if(isset($_GET['delete'])){
 /* FETCH STUDENTS */
 $students = mysqli_query($conn, "SELECT * FROM users WHERE role='student'");
 
-/* FETCH ALL COURSES (Kept as baseline fallback) */
+/* FETCH ALL COURSES */
 $courses = mysqli_query($conn, "SELECT * FROM courses");
 
 /* FETCH ENROLLMENTS */
@@ -58,7 +68,7 @@ JOIN courses
 ON enrollments.course_id = courses.id
 ");
 
-// Consume current session message to clear it for the next execution run
+
 $message = "";
 if (isset($_SESSION['alert_msg'])) {
     $message = $_SESSION['alert_msg'];
@@ -93,13 +103,13 @@ if (isset($_SESSION['alert_msg'])) {
             background: white; padding: 30px; border-radius: 6px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* Message Box Notification Layout Wrapper */
+        
         .msg-box { 
             text-align: center; 
             margin-bottom: 20px; 
         }
 
-        /* MODERN SMOOTH FADE ALERT BOX STYLING */
+        
         .alert-box {
             padding: 12px;
             width: 100%;
@@ -149,15 +159,15 @@ if (isset($_SESSION['alert_msg'])) {
         <h2 style="color:white; margin:0;">NEXUS UNIVERSITY</h2>
     </div>
     <div>
-        <a href="../index.php">HOME</a>
-        <a href="../admin/dashboard.php">ADMIN PANEL</a>
-        <a href="../admin/coursesdash.php">COURSES</a>
-        <a href="../admin/manage_enrollments.php">ENROLLMENTS</a>
-        <a href="../admin/manage_materials.php">MATERIALS</a>
-        <a href="../admin/view_submissions.php">SUBMISSIONS</a>
-        <a href="../admin/manage_assignments.php">ASSIGNMENTS</a>
-        <a href="../admin/manage_timetable.php">TIMETABLE</a>
-        <a href="../auth/logout.php">LOGOUT</a> 
+            <a href="../admin/dashboard.php">PANEL</a>
+            <a href="../admin/manage_requests.php">REQUESTS</a>
+            <a href="../admin/coursesdash.php">COURSES</a>
+            <a href="../admin/manage_enrollments.php">ENROLLMENTS</a>
+            <a href="../admin/manage_materials.php">MATERIALS</a>
+            <a href="../admin/view_submissions.php">SUBMISSIONS</a>
+            <a href="../admin/manage_assignments.php">ASSIGNMENTS</a>
+            <a href="../admin/manage_timetable.php">TIMETABLE</a>
+            <a href="../auth/logout.php">LOGOUT</a> 
     </div>
 </nav>
 
@@ -172,7 +182,10 @@ if (isset($_SESSION['alert_msg'])) {
     <form method="POST">
         <select name="student_id" id="student_select" required>
             <option value="">Select Student</option>
-            <?php while($student = mysqli_fetch_assoc($students)) { ?>
+            <?php 
+            // Rewind standard data pointer to cleanly handle the UI selection loop correctly
+            mysqli_data_seek($students, 0);
+            while($student = mysqli_fetch_assoc($students)) { ?>
                 <option value="<?php echo $student['id']; ?>">
                     <?php echo htmlspecialchars($student['name']); ?>
                 </option>
@@ -181,7 +194,10 @@ if (isset($_SESSION['alert_msg'])) {
 
         <select name="course_id" id="course_select" required>
             <option value="">Select Course</option>
-            <?php while($course = mysqli_fetch_assoc($courses)) { ?>
+            <?php 
+            // Rewind standard data pointer to cleanly handle the UI selection loop correctly
+            mysqli_data_seek($courses, 0);
+            while($course = mysqli_fetch_assoc($courses)) { ?>
                 <option value="<?php echo $course['id']; ?>">
                     <?php echo htmlspecialchars($course['course_name']); ?>
                 </option>

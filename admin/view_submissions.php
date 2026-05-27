@@ -244,15 +244,15 @@ if (isset($_SESSION['alert_msg'])) {
             <h2>NEXUS UNIVERSITY</h2>
         </div>
         <div>
-            <a href="../index.php">HOME</a>
-            <a href="../admin/dashboard.php">ADMIN PANEL</a>
+            <a href="../admin/dashboard.php">PANEL</a>
+            <a href="../admin/manage_requests.php">REQUESTS</a>
             <a href="../admin/coursesdash.php">COURSES</a>
             <a href="../admin/manage_enrollments.php">ENROLLMENTS</a>
             <a href="../admin/manage_materials.php">MATERIALS</a>
             <a href="../admin/view_submissions.php">SUBMISSIONS</a>
             <a href="../admin/manage_assignments.php">ASSIGNMENTS</a>
             <a href="../admin/manage_timetable.php">TIMETABLE</a>
-            <a href="../auth/logout.php">LOGOUT</a> 
+            <a href="../auth/logout.php">LOGOUT</a>
         </div>
     </nav>
 
@@ -333,7 +333,7 @@ if (isset($_SESSION['alert_msg'])) {
                     
                     <td>
                         <?php if ($has_submission) { 
-                            // Determine if a valid grade string/int or zero score already lives in the database
+                            
                             $has_grade = !empty($row['grade']) || $row['grade'] === '0';
                         ?>
                             <form method="POST" class="grade-form">
@@ -354,9 +354,7 @@ if (isset($_SESSION['alert_msg'])) {
                     </td>
                     
                     <td>
-                        <?php if (!empty($row['assignment_file'])) { ?>
-                            <a class="btn download" href="<?php echo htmlspecialchars($row['assignment_file']); ?>" download title="Download Master File">Prompt</a>
-                        <?php } ?>
+                       
                         <a class="btn delete"
                            href="?delete_id=<?php echo $row['assignment_id']; ?>"
                            onclick="return confirm('Warning: Deleting this assignment template will wipe out student submission states linked to it. Proceed?')">
