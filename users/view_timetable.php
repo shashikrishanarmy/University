@@ -19,6 +19,17 @@ if ($student_id === 0) {
     exit();
 }
 
+$user_id = intval($_SESSION['user_id']);
+
+// Fetch the logged-in student's full name from the 'users' table
+$name = "Student"; // Default fallback value
+$user_query = "SELECT name FROM users WHERE id = $user_id LIMIT 1"; 
+
+$user_result = mysqli_query($conn, $user_query);
+if ($user_result && $user_row = mysqli_fetch_assoc($user_result)) {
+    $name = $user_row['name']; 
+}
+
 $message = "";
 ?>
 
@@ -50,20 +61,22 @@ $message = "";
             justify-content: space-between;
             align-items: center;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             z-index: 1000;
         }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 10px;
+        nav a { 
+            color: white; 
+            text-decoration: none; 
+            margin: 10px; 
+            font-weight: bold;
+        }
+        nav a:hover { 
+            color: gold; 
         }
 
-        nav a:hover {
-            color: gold;
+        
+        nav a.active {
+            color: gold !important;
         }
 
         .logo-section {
@@ -81,6 +94,14 @@ $message = "";
         .logo-section h2 {
             color: white;
             margin: 0;
+        }
+
+        .user-welcome {
+            color: #2ecc71;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-left: 10px;
+            font-size: 14px;
         }
 
         .title {
@@ -179,19 +200,25 @@ $message = "";
 <body>
 
     
-    <nav>
-        <div class="logo-section">
-            <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
-            <h2>NEXUS UNIVERSITY</h2>
-        </div>
-        <div>
-            <a href="../users/home.php" style="color:gold;">STUDENT PANEL</a>
-            <a href="../users/view_materials.php">MATERIALS</a>
-            <a href="../users/assignments.php">ASSIGNMENTS</a>
-            <a href="../users/view_timetable.php">TIMETABLE</a>
-            <a href="../auth/logout.php">LOGOUT</a>
-        </div>
-    </nav>
+   <?php
+    // Get the current running file filename
+    $current_page = basename($_SERVER['PHP_SELF']);
+    ?>
+
+<nav>
+    <div class="logo-section">
+        <img src="../assets/images/logo.png" class="logo" alt="Nexus Logo">
+        <h2 style="color:white; margin:0; font-size: 20px;">NEXUS UNIVERSITY</h2>
+    </div>
+    <div>
+        <a href="../users/home.php" class="<?php echo ($current_page == 'home.php') ? 'active' : ''; ?>">STUDENT PANEL</a>
+        <a href="../users/view_materials.php" class="<?php echo ($current_page == 'view_materials.php') ? 'active' : ''; ?>">MATERIALS</a>
+        <a href="../users/assignments.php" class="<?php echo ($current_page == 'assignments.php') ? 'active' : ''; ?>">ASSIGNMENTS</a>
+        <a href="../users/view_timetable.php" class="<?php echo ($current_page == 'view_timetable.php') ? 'active' : ''; ?>">TIMETABLE</a>
+        <span class="user-welcome">👤 <?php echo htmlspecialchars($name); ?></span>
+        <a href="../auth/logout.php">LOGOUT</a>
+    </div>
+</nav>
 
     
     <section class="title">

@@ -115,6 +115,7 @@ if(isset($_POST['register'])){
 
     <div class="login-link">
     Already have an account? <a href="../auth/login.php">Login</a>
+    Back to Admin Panel <a href="../admin/dashboard.php">Admin Panel</a>
 </div>
 
 

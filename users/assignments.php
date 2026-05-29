@@ -13,6 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = intval($_SESSION['user_id']);
 
+
 // UPLOAD Logic for Assignment Submissions
 if (isset($_POST['submit_assignment'])) {
     $assignment_id = intval($_POST['assignment_id']);
@@ -50,10 +51,10 @@ if (isset($_POST['submit_assignment'])) {
                     $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-success'>Assignment submitted successfully!</div>";
                 }
             } else {
-                $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Upload failed! Server could not save the file.</div>";
+                $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Upload failed! could not save the file.</div>";
             }
         } else {
-            $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Invalid file type! Allowed options: PDF, DOC, DOCX, ZIP.</div>";
+            $_SESSION['alert_msg'] = "<div id='status-alert' class='alert-box alert-danger'>Invalid file type! Allowed only PDF, DOC, DOCX, ZIP.</div>";
         }
     }
     header("Location: " . $_SERVER['PHP_SELF']);
@@ -65,6 +66,18 @@ $message = "";
 if (isset($_SESSION['alert_msg'])) {
     $message = $_SESSION['alert_msg'];
     unset($_SESSION['alert_msg']);
+}
+
+$user_id = intval($_SESSION['user_id']);
+
+// Fetch the logged-in student's full name from the 'users' table
+
+$name = "Student"; // Default fallback value
+$user_query = "SELECT name FROM users WHERE id = $user_id LIMIT 1"; 
+
+$user_result = mysqli_query($conn, $user_query);
+if ($user_result && $user_row = mysqli_fetch_assoc($user_result)) {
+    $name = $user_row['name']; 
 }
 ?>
 
@@ -89,21 +102,40 @@ if (isset($_SESSION['alert_msg'])) {
 
         
         nav {
-            background: #0b1d51;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-        }
-        nav a { color: white; text-decoration: none; margin: 10px; }
-        nav a:hover { color: gold; }
+    background: #0b1d51;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+}
+nav a { 
+    color: white; 
+    text-decoration: none; 
+    margin: 10px; 
+    font-weight: bold;
+}
+nav a:hover { 
+    color: gold; 
+}
+
+/* New CSS Rule: Applies yellow highlight to the active page link */
+nav a.active {
+    color: gold !important;
+}
 
         .logo-section { display: flex; align-items: center; gap: 10px; }
         .logo { width: 50px; height: 50px; border-radius: 50%; }
 
+         .user-welcome {
+            color: #2ecc71;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-left: 10px;
+            font-size: 14px;
+        }
         
         .title { text-align: center; margin-bottom: 10px; }
         .title h1 { color: #0b1d51; font-size: 32px; margin: 10px 0; }
@@ -244,16 +276,22 @@ if (isset($_SESSION['alert_msg'])) {
 </head>
 <body>
 
+<?php
+// Get the current running file filename
+$current_page = basename($_SERVER['PHP_SELF']);
+?>
+
 <nav>
     <div class="logo-section">
         <img src="../assets/images/logo.png" class="logo" alt="Nexus Logo">
         <h2 style="color:white; margin:0; font-size: 20px;">NEXUS UNIVERSITY</h2>
     </div>
     <div>
-        <a href="../users/home.php" style="color:gold;">STUDENT PANEL</a>
-        <a href="../users/view_materials.php">MATERIALS</a>
-        <a href="../users/assignments.php">ASSIGNMENTS</a>
-        <a href="../users/view_timetable.php">TIMETABLE</a>
+        <a href="../users/home.php" class="<?php echo ($current_page == 'home.php') ? 'active' : ''; ?>">STUDENT PANEL</a>
+        <a href="../users/view_materials.php" class="<?php echo ($current_page == 'view_materials.php') ? 'active' : ''; ?>">MATERIALS</a>
+        <a href="../users/assignments.php" class="<?php echo ($current_page == 'assignments.php') ? 'active' : ''; ?>">ASSIGNMENTS</a>
+        <a href="../users/view_timetable.php" class="<?php echo ($current_page == 'view_timetable.php') ? 'active' : ''; ?>">TIMETABLE</a>
+        <span class="user-welcome">👤 <?php echo htmlspecialchars($name); ?></span>
         <a href="../auth/logout.php">LOGOUT</a>
     </div>
 </nav>
@@ -366,6 +404,7 @@ if (isset($_SESSION['alert_msg'])) {
             
             $grades_result = mysqli_query($conn, $grades_query);
 
+            //check if there are any graded submissions and display them in the sidebar
             if (mysqli_num_rows($grades_result) > 0) {
                 while ($grade_row = mysqli_fetch_assoc($grades_result)) {
                     ?>

@@ -2,16 +2,16 @@
 session_start();
 include '../config/db.php';
 
-$message = "";
-$msg_style = "";
+$message = ""; // use to store feedback messages
+$msg_style = ""; // purpose is to set styling for message box of success or error messages
 
 // ACTION HANDLER: ACCEPT, DECLINE, OR REGISTER 
 if (isset($_GET['id']) && isset($_GET['action'])) {
-    $request_id = intval($_GET['id']);
+    $request_id = intval($_GET['id']); //intval is used to get the interger value of a variable
     $action = $_GET['action']; 
     
     // Fetch targeted entry details
-    $fetch_query = "SELECT * FROM request_courses WHERE id = $request_id LIMIT 1";
+    $fetch_query = "SELECT * FROM request_courses WHERE id = $request_id LIMIT 1"; // Limit 1 is used to limit the result to only one record
     $result = mysqli_query($conn, $fetch_query);
     
     if ($result && mysqli_num_rows($result) > 0) {
@@ -81,7 +81,7 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
             $msg_style = "background: #ffdddd; color: red; border: 1px solid red;";
             
         } elseif ($action === 'register') {
-            // NEW STEP: Flag record status as Registered before navigating to signup form
+            // Show status as Registered before navigating to signup form
             mysqli_query($conn, "UPDATE request_courses SET status = 'Registered' WHERE id = $request_id");
             
             // Securely transfer to original profile generation module screen

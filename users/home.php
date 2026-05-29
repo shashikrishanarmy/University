@@ -10,7 +10,14 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = intval($_SESSION['user_id']);
 
+// Fetch the logged-in student's full name from the 'users' table
+$name = "Student"; // Default fallback value
+$user_query = "SELECT name FROM users WHERE id = $user_id LIMIT 1"; 
 
+$user_result = mysqli_query($conn, $user_query);
+if ($user_result && $user_row = mysqli_fetch_assoc($user_result)) {
+    $name = $user_row['name']; 
+}
 
 // Get total materials using course_materials table 
 $materials_count = 0;
@@ -24,7 +31,6 @@ $mat_result = mysqli_query($conn, $mat_query);
 if ($mat_result && $mat_row = mysqli_fetch_assoc($mat_result)) {
     $materials_count = intval($mat_row['total_materials']);
 }
-
 
 $assignments_issued = 0;
 $assignments_submitted = 0;
@@ -65,8 +71,9 @@ if ($assignments_pending < 0) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>NEXUS UNIVERSITY - Student Home</title>
 
     <style>
@@ -85,7 +92,6 @@ if ($assignments_pending < 0) {
             padding-top: 110px;
         }
 
-        
         nav {
             background: #0b1d51;
             padding: 15px;
@@ -93,20 +99,21 @@ if ($assignments_pending < 0) {
             justify-content: space-between;
             align-items: center;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+            top: 0; left: 0; right: 0;
             z-index: 1000;
         }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 10px;
+        nav a { 
+            color: white; 
+            text-decoration: none; 
+            margin: 10px; 
+            font-weight: bold;
+        }
+        nav a:hover { 
+            color: gold; 
         }
 
-        nav a:hover {
-            color: gold;
+        nav a.active {
+            color: gold !important;
         }
 
         .logo-section {
@@ -121,7 +128,14 @@ if ($assignments_pending < 0) {
             border-radius: 50%;
         }
 
-        
+        .user-welcome {
+            color: #2ecc71;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
         .hero {
             text-align: center;
             padding: 50px 20px;
@@ -137,7 +151,6 @@ if ($assignments_pending < 0) {
             color: #333;
         }
 
-        
         .cards {
             display: flex;
             justify-content: center;
@@ -170,10 +183,9 @@ if ($assignments_pending < 0) {
             margin-bottom: 15px;
         }
 
-        
         .counter-badge {
             display: inline-block;
-            background-color: #dc3545; /* Notification Red */
+            background-color: #dc3545; 
             color: white;
             font-weight: bold;
             font-size: 14px;
@@ -183,7 +195,6 @@ if ($assignments_pending < 0) {
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        
         .badge-list {
             display: flex;
             flex-direction: column;
@@ -211,7 +222,6 @@ if ($assignments_pending < 0) {
             font-size: 12px;
         }
 
-        
         .card a {
             display: inline-block;
             margin-top: auto;
@@ -229,7 +239,6 @@ if ($assignments_pending < 0) {
             color: gold;
         }
 
-        
         footer {
             background: #0b1d51;
             color: white;
@@ -254,21 +263,26 @@ if ($assignments_pending < 0) {
         }
     </style>
 </head>
-
 <body>
+
+<?php
+// Get the current running filename
+$current_page = basename($_SERVER['PHP_SELF']);
+?>
 
 <nav>
     <div class="logo-section">
-        <img src="../assets/images/logo.png" alt="Logo" class="logo">
-        <h2 style="color:white; margin:0;">NEXUS UNIVERSITY</h2>
+        <img src="../assets/images/logo.png" class="logo" alt="Nexus Logo">
+        <h2 style="color:white; margin:0; font-size: 20px;">NEXUS UNIVERSITY</h2>
     </div>
-
     <div>
-        <a href="../users/home.php" style="color:gold;">STUDENT PANEL</a>
-        <a href="../users/view_materials.php">MATERIALS</a>
-        <a href="../users/assignments.php">ASSIGNMENTS</a>
-        <a href="../users/view_timetable.php">TIMETABLE</a>
-        <a href="../auth/logout.php">LOGOUT</a>
+        <a href="../users/home.php" class="<?php echo ($current_page == 'home.php') ? 'active' : ''; ?>">STUDENT PANEL</a>
+        <a href="../users/view_materials.php" class="<?php echo ($current_page == 'view_materials.php') ? 'active' : ''; ?>">MATERIALS</a>
+        <a href="../users/assignments.php" class="<?php echo ($current_page == 'assignments.php') ? 'active' : ''; ?>">ASSIGNMENTS</a>
+        <a href="../users/view_timetable.php" class="<?php echo ($current_page == 'view_timetable.php') ? 'active' : ''; ?>">TIMETABLE</a>
+        
+        <span class="user-welcome">👤 Hello, <?php echo htmlspecialchars($name); ?></span>
+        <a href="../auth/logout.php" style="color: #ff4d4d;">LOGOUT</a>
     </div>
 </nav>
 
@@ -289,7 +303,6 @@ if ($assignments_pending < 0) {
                 📚 <?php echo $materials_count; ?> Available
             </div>
         </div>
-        
     </div>
 
     <div class="card">
@@ -314,8 +327,6 @@ if ($assignments_pending < 0) {
                 <span class="badge-count" style="background: #dc3545;"><?php echo $assignments_pending; ?></span>
             </div>
         </div>
-
-        
     </div>
 
 </section>
