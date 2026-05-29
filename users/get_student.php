@@ -4,10 +4,10 @@ include '../config/db.php';
 if (isset($_GET['name'])) {
     $name = mysqli_real_escape_string($conn, $_GET['name']);
     
-    // Looks up the most recent entry for this student name
+    // Convert both the DB column and search input to lowercase for case-insensitivity
     $query = "SELECT contact_number, email, nic_or_passport, highest_qualification 
               FROM request_courses 
-              WHERE student_name = '$name' 
+              WHERE LOWER(student_name) = LOWER('$name') 
               ORDER BY id DESC LIMIT 1";
               
     $result = mysqli_query($conn, $query);
@@ -20,3 +20,4 @@ if (isset($_GET['name'])) {
     }
     exit;
 }
+?>

@@ -251,7 +251,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a href="../users/assignments.php" class="<?php echo ($current_page == 'assignments.php') ? 'active' : ''; ?>">ASSIGNMENTS</a>
         <a href="../users/view_timetable.php" class="<?php echo ($current_page == 'view_timetable.php') ? 'active' : ''; ?>">TIMETABLE</a>
         <span class="user-welcome">👤 <?php echo htmlspecialchars($name); ?></span>
-        <a href="../auth/logout.php">LOGOUT</a>
+        <a href="../auth/logout.php" style="color: #ff4d4d;">LOGOUT</a>
     </div>
 </nav>
 

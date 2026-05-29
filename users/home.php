@@ -239,6 +239,21 @@ if ($assignments_pending < 0) {
             color: gold;
         }
 
+        .roller-text {
+            font-size: 50px;
+            font-weight: bold;
+            display: inline-block;
+            animation: wave 2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%   { transform: translateY(0); }
+            25%  { transform: translateY(-10px); }
+            50%  { transform: translateY(0); }
+            75%  { transform: translateY(10px); }
+            100% { transform: translateY(0); }
+        }
+
         footer {
             background: #0b1d51;
             color: white;
@@ -288,7 +303,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <section class="hero">
     <h1>Welcome to Nexus University</h1>
-    <p style="font-size: 30px;">Explore courses, access study materials, and enhance your learning experience.</p>
+    <p class="roller-text">
+  Explore courses, access study materials, and enhance your learning experience.
+</p>
 </section>
 
 <section class="cards">

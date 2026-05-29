@@ -1,7 +1,5 @@
-
 <?php
 session_start();
-//include '../middleware/admin_auth.php';
 include '../config/db.php';
 
 $error = "";
@@ -20,17 +18,14 @@ if(isset($_POST['login'])){
 
         if(password_verify($password, $user['password'])){
 
-            
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['role'] = $user['role'];
 
-            // ROLE BASED REDIRECT 
             if($user['role'] == 'admin'){
                 header("Location: ../admin/dashboard.php");
             }else{
                 header("Location: ../users/home.php");
             }
-
             exit();
 
         }else{
@@ -48,208 +43,227 @@ if(isset($_POST['login'])){
 <head>
     <title>NEXUS UNIVERSITY - Login</title>
 
-    <style>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial, sans-serif;
-        }
 
-        body{
-            height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            background:linear-gradient(135deg, #0b1d51, #1e3c72);
-            padding-top: 110px;
-        }
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:url('../assets/images/login.jpg') no-repeat center/cover;
+    position:relative;
+}
 
-        nav {
-            background: #0b1d51;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-        }
+/* 🌑 Overlay */
+body::before{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+}
 
-       
-        nav a{
-            color:white;
-            text-decoration:none;
-            margin:10px;
+/* 🧊 Glass Card */
+.login-container{
+    position:relative;
+    z-index:1;
+    width:360px;
+    padding:40px;
+    border-radius:15px;
 
-        }
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(12px);
 
-        nav a:hover{
-            color:gold;
-        }
+    border:1px solid rgba(255,255,255,0.2);
+    box-shadow:0 8px 30px rgba(0,0,0,0.5);
 
-        .logo-section {
-             display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    color:white;
+    text-align:center;
 
-        .logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-        }
+    animation:fadeIn 1s ease;
+}
 
-        .logo-section h2 {
-            color: white;
-            margin: 0;
-        }
+/* Animation */
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(30px);}
+    to{opacity:1; transform:translateY(0);}
+}
 
-        .login-container{
-            width:380px;
-            background:white;
-            padding:40px;
-            border-radius:15px;
-            box-shadow:0px 8px 25px rgba(0,0,0,0.3);
-            text-align:center;
-        }
+.login-container h1{
+    margin-bottom:10px;
+}
 
-        .login-container h1{
-            color:#0b1d51;
-            margin-bottom:10px;
-        }
+.login-container p{
+    color:#ddd;
+    margin-bottom:25px;
+}
 
-        .login-container p{
-            color:gray;
-            margin-bottom:30px;
-        }
 
-        .input-box{
-            margin-bottom:20px;
-            text-align:left;
-        }
+.input-box{
+    margin-bottom:20px;
+    text-align:left;
+    position:relative;
+}
 
-        .input-box label{
-            display:block;
-            margin-bottom:8px;
-            color:#333;
-            font-weight:bold;
-        }
+.input-box label{
+    font-size:14px;
+}
 
-        .input-box input{
-            width:100%;
-            padding:12px;
-            border:1px solid #ccc;
-            border-radius:8px;
-            outline:none;
-            transition:0.3s;
-        }
+.input-box input{
+    width:100%;
+    padding:12px;
+    margin-top:5px;
+    border-radius:8px;
+    border:none;
+    outline:none;
 
-        .input-box input:focus{
-            border-color:#0b1d51;
-            box-shadow:0px 0px 8px rgba(11,29,81,0.3);
-        }
+    background:rgba(255,255,255,0.2);
+    color:white;
 
-        .login-btn{
-            width:100%;
-            padding:12px;
-            border:none;
-            border-radius:8px;
-            background:#0b1d51;
-            color:white;
-            font-size:16px;
-            cursor:pointer;
-            transition:0.3s;
-        }
+    transition:0.3s;
+}
 
-        .login-btn:hover{
-            background:gold;
-            color:#0b1d51;
-            font-weight:bold;
-        }
+.input-box input::placeholder{
+    color:#ccc;
+}
 
-        .error{
-            background:#ffe5e5;
-            color:red;
-            padding:10px;
-            border-radius:8px;
-            margin-bottom:15px;
-        }
+.input-box input:focus{
+    background:rgba(255,255,255,0.3);
+    box-shadow:0 0 8px rgba(255,255,255,0.5);
+}
 
-        .footer-text{
-            margin-top:20px;
-            font-size:14px;
-            color:gray;
-        }
+/* 👁️ Password icon */
+.toggle-password{
+    position:absolute;
+    right:10px;
+    top:38px;
+    cursor:pointer;
+}
 
-        .footer-text a{
-            color:#0b1d51;
-            text-decoration:none;
-            font-weight:bold;
-        }
 
-        .footer-text a:hover{
-            color:gold;
-        }
+.login-btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(45deg, gold, orange);
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
 
-    </style>
+.login-btn:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 15px gold;
+}
+
+
+.error{
+    background:rgba(255,0,0,0.2);
+    color:#ffb3b3;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:15px;
+}
+
+
+nav{
+    position:fixed;
+    top:0;
+    width:100%;
+    padding:15px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(89, 88, 88, 0.5);
+    backdrop-filter:blur(8px);
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin:10px;
+    transition:0.3s;
+}
+
+nav a:hover{
+    color:gold;
+}
+
+.logo-section{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+}
+</style>
+
 </head>
 
 <body>
 
-    <nav>
-        <div class="logo-section">
-        <img src="../assets/images/logo.png" alt="NEXUS UNIVERSITY Logo" class="logo">
-        <h2 style="color:white;">NEXUS UNIVERSITY</h2>
-        </div>
-
-        <div>
-            <a href="../index.php">HOME</a>
-            <a href="../users/courses.php">COURSES</a>
-            <!-- <a href="gallery.php">GALLERY</a> -->
-            <!-- <a href="contact.php">CONTACT US</a> -->
-
-            <a href="../auth/login.php">LOGIN</a>
-            <!-- <a href="auth/signup.php">SIGNUP</a> -->
-        </div>
-    </nav>
-
-
-    <div class="login-container">
-
-        <h1>NEXUS UNIVERSITY</h1>
-        <p>Login to your account</p>
-
-        <?php if(!empty($error)) : ?>
-            <div class="error">
-                <?php echo $error; ?>
-            </div>
-        <?php endif; ?>
-
-        <form method="POST">
-
-            <div class="input-box">
-                <label>Email</label>
-                <input type="email" name="email" placeholder="Enter your email" required>
-            </div>
-
-            <div class="input-box">
-                <label>Password</label>
-                <input type="password" name="password" placeholder="Enter your password" required>
-            </div>
-
-            <button type="submit" name="login" class="login-btn">
-                Login
-            </button>
-
-        </form>
-
-       
-
+<nav>
+    <div class="logo-section">
+        <img src="../assets/images/logo.png" class="logo">
+        <h2>NEXUS UNIVERSITY</h2>
     </div>
+
+    <div>
+        <a href="../index.php">HOME</a>
+        <a href="../users/courses.php">COURSES</a>
+        <a href="../auth/login.php">LOGIN</a>
+    </div>
+</nav>
+
+<div class="login-container">
+
+    <h1>NEXUS UNIVERSITY</h1>
+    <p>Login to your account</p>
+
+    <?php if(!empty($error)) : ?>
+        <div class="error"><?php echo $error; ?></div>
+    <?php endif; ?>
+
+    <form method="POST">
+
+        <div class="input-box">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter your email" required>
+        </div>
+
+        <div class="input-box">
+            <label>Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            <span class="toggle-password" onclick="togglePassword()">👁️</span>
+        </div>
+
+        <button type="submit" name="login" class="login-btn">
+            Login
+        </button>
+
+    </form>
+
+</div>
+
+<script>
+function togglePassword(){
+    const pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+</script>
 
 </body>
 </html>

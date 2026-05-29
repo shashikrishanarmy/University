@@ -95,7 +95,6 @@ if (isset($_POST['submit_request'])) {
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        /* Auto-fill notification glow style */
         .suggested-fill {
             background-color: #eafaf1 !important;
             border: 1px solid #2ecc71 !important;
@@ -244,36 +243,40 @@ if (isset($_POST['submit_request'])) {
 
             // AJAX Form Fill Engine
             const nameInput = document.getElementById('student_name');
+            let typingTimer;
             
-            // Fires asynchronous fetch when user clicks out or finishes editing name field
-            nameInput.addEventListener('change', function() {
+            // Using 'input' listener captures changes instantly as the user types
+            nameInput.addEventListener('input', function() {
+                clearTimeout(typingTimer);
                 const nameValue = this.value.trim();
-                if(nameValue.length < 3) return; // Ignores incomplete entries
+                
+                if(nameValue.length < 3) return; // Wait until a meaningful name string is typed
 
-                fetch(`get_student.php?name=${encodeURIComponent(nameValue)}`)
-                    .then(response => response.json())
-                    .then(res => {
-                        const targets = ['contact_number', 'email', 'nic_or_passport', 'highest_qualification'];
-                        
-                        if(res.success && res.data) {
-                            // Populate target data fields seamlessly
-                            document.getElementById('contact_number').value = res.data.contact_number;
-                            document.getElementById('email').value = res.data.email;
-                            document.getElementById('nic_or_passport').value = res.data.nic_or_passport;
-                            document.getElementById('highest_qualification').value = res.data.highest_qualification;
+                // 400ms delay protects against spamming the database on every individual keystroke
+                typingTimer = setTimeout(() => {
+                    fetch(`get_student.php?name=${encodeURIComponent(nameValue)}`)
+                        .then(response => response.json())
+                        .then(res => {
+                            const targets = ['contact_number', 'email', 'nic_or_passport', 'highest_qualification'];
+                            
+                            if(res.success && res.data) {
+                                document.getElementById('contact_number').value = res.data.contact_number;
+                                document.getElementById('email').value = res.data.email;
+                                document.getElementById('nic_or_passport').value = res.data.nic_or_passport;
+                                document.getElementById('highest_qualification').value = res.data.highest_qualification;
 
-                            // Apply visual highlights indicating verification matches found
-                            targets.forEach(id => {
-                                document.getElementById(id).classList.add('suggested-fill');
-                            });
-                        } else {
-                            // Clear validation highlights if name modified to a non-existent entity
-                            targets.forEach(id => {
-                                document.getElementById(id).classList.remove('suggested-fill');
-                            });
-                        }
-                    })
-                    .catch(err => console.error("Error executing auto-lookup request pipeline:", err));
+                                targets.forEach(id => {
+                                    document.getElementById(id).classList.add('suggested-fill');
+                                });
+                            } else {
+                                // If name changes to something unknown, clean up the status glow highlights
+                                targets.forEach(id => {
+                                    document.getElementById(id).classList.remove('suggested-fill');
+                                });
+                            }
+                        })
+                        .catch(err => console.error("Error executing case-insensitive auto-lookup pipeline:", err));
+                }, 400);
             });
         });
     </script>
